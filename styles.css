@@ -144,6 +144,18 @@ body::after {
     box-shadow: 0 0 20px #b30000, 0 0 40px #ff3333;
 }
 
+.tg-channel {
+    background: #1a4d1a;
+    border-color: #4da64d;
+    box-shadow: 0 0 10px #00aa00;
+}
+
+.tg-channel:hover {
+    background: #2d6b2d;
+    border-color: #88ff88;
+    box-shadow: 0 0 30px #00ff00;
+}
+
 /* ===== МЕНЮ НАВИГАЦИИ ===== */
 .nav-menu {
     display: flex;
@@ -184,7 +196,7 @@ body::after {
     box-shadow: 0 0 15px #b30000, 0 0 30px #ff3333;
 }
 
-/* ===== РЕЙТИНГ АКТИВНОСТИ ШКОЛ (ПЬЕДЕСТАЛ) ===== */
+/* ===== РЕЙТИНГ АКТИВНОСТИ ШКОЛ (КРАСИВЫЙ ПЬЕДЕСТАЛ) ===== */
 .school-activity {
     background: #130606;
     border: 2px solid #a52a2a;
@@ -233,7 +245,7 @@ body::after {
     gap: 15px;
     position: relative;
     z-index: 1;
-    min-height: 200px;
+    min-height: 250px;
     flex-wrap: wrap;
 }
 
@@ -243,7 +255,7 @@ body::after {
     align-items: center;
     transition: 0.3s;
     animation: float 6s infinite ease-in-out;
-    flex: 1 1 120px;
+    flex: 1 1 140px;
 }
 
 .podium-place:nth-child(1) { animation-delay: 0s; }
@@ -260,57 +272,103 @@ body::after {
 .place-1 { order: 2; }
 .place-3 { order: 3; }
 
+.place-number {
+    font-size: clamp(16px, 4vw, 20px);
+    font-weight: bold;
+    color: #ffd9d9;
+    margin-bottom: 10px;
+    text-shadow: 0 0 10px #b30000, 0 0 20px #ffaa00;
+    background: rgba(0,0,0,0.5);
+    padding: 5px 15px;
+    border-radius: 30px;
+    border: 1px solid #ffaa00;
+}
+
 .place-bar {
     width: 100%;
-    max-width: 220px;
-    background: #2a0a0a;
-    border: 2px solid #b34d4d;
+    max-width: 240px;
+    background: linear-gradient(145deg, #2a0a0a, #3f1212);
+    border: 2px solid #ff6a6a;
     border-radius: 40px 40px 20px 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 15px 10px;
-    box-shadow: 0 10px 0 #3d0000, 0 0 30px #660000, 0 0 60px #b30000;
+    padding: 20px 10px;
+    box-shadow: 0 10px 0 #3d0000, 0 0 30px #ff3333, 0 0 60px #b30000;
+    position: relative;
+    overflow: hidden;
+}
+
+.place-bar::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+    animation: shine 3s infinite;
+}
+
+@keyframes shine {
+    0% { transform: translateX(-100%); }
+    20% { transform: translateX(100%); }
+    100% { transform: translateX(100%); }
 }
 
 .place-1 .place-bar {
-    min-height: 180px;
-    background: #3f1212;
-    border-color: #ff6a6a;
+    min-height: 200px;
+    background: linear-gradient(145deg, #4f1a1a, #6b2424);
+    border-color: #ffaa00;
+    box-shadow: 0 15px 0 #4d0000, 0 0 40px #ffaa00, 0 0 80px #ff6600;
 }
 
 .place-2 .place-bar {
-    min-height: 140px;
+    min-height: 160px;
 }
 
 .place-3 .place-bar {
-    min-height: 110px;
+    min-height: 130px;
 }
 
 .school-name-podium {
-    font-size: clamp(18px, 5vw, 24px);
+    font-size: clamp(20px, 5vw, 26px);
     font-weight: bold;
     color: #ffb3b3;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     text-align: center;
     word-break: break-word;
+    text-shadow: 0 0 15px #ff3333;
 }
 
 .place-1 .school-name-podium {
-    font-size: clamp(22px, 6vw, 30px);
+    font-size: clamp(24px, 6vw, 32px);
     color: #ffd9d9;
-    text-shadow: 0 0 10px #ff3333;
+    text-shadow: 0 0 20px #ffaa00, 0 0 40px #ff6600;
 }
 
 .school-score {
-    font-size: clamp(22px, 6vw, 28px);
+    font-size: clamp(28px, 7vw, 36px);
     color: #ff7878;
     font-weight: bold;
-    text-shadow: 0 0 15px #ff4d4d, 0 0 30px #ff0000;
+    text-shadow: 0 0 20px #ff4d4d, 0 0 40px #ff0000;
+    margin-bottom: 5px;
 }
 
 .place-1 .school-score {
-    font-size: clamp(32px, 8vw, 42px);
+    font-size: clamp(38px, 9vw, 48px);
+    color: #ffaa00;
+    text-shadow: 0 0 20px #ffaa00, 0 0 40px #ff6600;
+}
+
+.podium-stats {
+    font-size: 14px;
+    color: #ffa5a5;
+    text-align: center;
+    padding: 5px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 20px;
+    width: 100%;
 }
 
 /* ===== ПОБЕДИТЕЛИ РАЙОНА ===== */
@@ -412,7 +470,15 @@ body::after {
     border: 1px solid #ff6a6a;
     color: #ffe6e6;
     word-break: break-word;
+    margin-bottom: 3px;
+}
+
+.winner-school {
+    font-size: 12px;
+    color: #ffaa00;
+    font-weight: bold;
     margin-bottom: 5px;
+    text-shadow: 0 0 8px #ffaa00;
 }
 
 .winner-votes {
@@ -930,39 +996,39 @@ body::after {
 
 /* TG Канал блок */
 .tg-channel-block {
-    background: linear-gradient(145deg, #2a0a0a, #4a1515);
-    border: 3px solid #ff6a6a;
+    background: linear-gradient(145deg, #1a3d1a, #2d6b2d);
+    border: 3px solid #88ff88;
     border-radius: 50px;
     padding: 25px;
     margin-bottom: 30px;
     text-align: center;
-    box-shadow: 0 0 30px #ff0000;
+    box-shadow: 0 0 30px #00ff00;
     animation: tgChannelPulse 3s infinite;
 }
 
 @keyframes tgChannelPulse {
-    0% { box-shadow: 0 0 20px #ff0000; }
-    50% { box-shadow: 0 0 50px #ff6666, 0 0 80px #ff0000; }
-    100% { box-shadow: 0 0 20px #ff0000; }
+    0% { box-shadow: 0 0 20px #00aa00; }
+    50% { box-shadow: 0 0 50px #88ff88, 0 0 80px #00ff00; }
+    100% { box-shadow: 0 0 20px #00aa00; }
 }
 
 .tg-channel-title {
     font-size: 26px;
-    color: #ffd9d9;
+    color: #ffffff;
     margin-bottom: 15px;
     text-transform: uppercase;
-    text-shadow: 0 0 15px #ff3333;
+    text-shadow: 0 0 15px #88ff88;
 }
 
 .tg-channel-text {
     font-size: 18px;
-    color: #ffcfcf;
+    color: #ccffcc;
     margin-bottom: 20px;
 }
 
 .tg-channel-button {
     display: inline-block;
-    background: #ff3333;
+    background: #00aa00;
     color: white;
     padding: 15px 40px;
     border-radius: 50px;
@@ -970,20 +1036,21 @@ body::after {
     font-size: 22px;
     font-weight: bold;
     text-transform: uppercase;
-    border: 2px solid #ffcccc;
-    box-shadow: 0 0 30px #ff0000;
+    border: 2px solid #88ff88;
+    box-shadow: 0 0 30px #00ff00;
     transition: 0.2s;
     animation: buttonPulse 2s infinite;
 }
 
 @keyframes buttonPulse {
     0% { transform: scale(1); }
-    50% { transform: scale(1.05); box-shadow: 0 0 50px #ff6666; }
+    50% { transform: scale(1.05); box-shadow: 0 0 50px #88ff88; }
     100% { transform: scale(1); }
 }
 
 .tg-channel-button:hover {
-    background: #ff6666;
+    background: #88ff88;
+    color: black;
     transform: scale(1.1);
 }
 
@@ -1011,4 +1078,339 @@ body::after {
 }
 
 .poll-item {
-    background: #3f
+    background: #3f1212;
+    border: 2px solid #b35959;
+    border-radius: 30px;
+    padding: 15px;
+    flex: 1 1 250px;
+    text-align: center;
+}
+
+.poll-question {
+    font-size: 18px;
+    color: #ffcfcf;
+    margin-bottom: 12px;
+}
+
+.poll-options {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.poll-btn {
+    background: #551111;
+    border: 2px solid #ff8a8a;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 16px;
+}
+
+.poll-btn:hover {
+    background: #821f1f;
+    transform: scale(1.05);
+    box-shadow: 0 0 15px #ff3333;
+}
+
+.poll-btn.active-poll {
+    background: #9e2626;
+    box-shadow: 0 0 20px #ff3333;
+}
+
+/* Форма предложений */
+.suggestion-form {
+    background: #2a0c0c;
+    border-radius: 40px;
+    padding: 20px;
+    margin-bottom: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.form-title {
+    font-size: 20px;
+    color: #ffb3b3;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.suggestion-nick, .suggestion-school, .suggestion-text {
+    background: #3f1212;
+    border: 2px solid #b65c5c;
+    color: #ffbebe;
+    padding: 12px 15px;
+    font-size: 16px;
+    border-radius: 30px;
+    width: 100%;
+}
+
+.suggestion-school {
+    cursor: pointer;
+}
+
+.suggestion-text {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.suggestion-send {
+    background: #821f1f;
+    border: none;
+    color: white;
+    padding: 12px;
+    border-radius: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    border: 2px solid #ff8a8a;
+    font-size: 18px;
+    transition: 0.2s;
+}
+
+.suggestion-send:hover {
+    background: #a52a2a;
+    box-shadow: 0 0 20px #ff3333;
+}
+
+.suggestions-list {
+    background: #2a0c0c;
+    border-radius: 40px;
+    padding: 20px;
+}
+
+.list-title {
+    font-size: 20px;
+    color: #ffb3b3;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.suggestion-item {
+    background: #3f1212;
+    border: 1px solid #b35959;
+    border-radius: 25px;
+    padding: 12px;
+    margin-bottom: 10px;
+}
+
+.suggestion-meta {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #ffa5a5;
+    flex-wrap: wrap;
+}
+
+.suggestion-author {
+    color: #ff7878;
+    font-weight: bold;
+}
+
+.suggestion-school-tag {
+    background: #551111;
+    padding: 2px 8px;
+    border-radius: 15px;
+}
+
+.suggestion-content {
+    color: #ffcfcf;
+    font-size: 16px;
+    word-break: break-word;
+}
+
+/* ===== СЕКЦИЯ О ПРОЕКТЕ ===== */
+.about-section {
+    margin-top: 30px;
+    background: #1a0606;
+    border: 3px solid #b33a3a;
+    border-radius: 50px;
+    padding: 30px;
+    box-shadow: 0 0 40px #660000;
+}
+
+.about-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.about-content h2 {
+    font-size: 32px;
+    color: #ffadad;
+    text-align: center;
+    margin-bottom: 25px;
+    text-shadow: 0 0 15px #ff3333;
+}
+
+.about-content h3 {
+    font-size: 24px;
+    color: #ffb3b3;
+    margin: 20px 0 10px;
+    text-shadow: 0 0 10px #ff3333;
+}
+
+.about-content p {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #ffcfcf;
+    margin-bottom: 15px;
+}
+
+.about-ad {
+    background: linear-gradient(145deg, #2a0a0a, #4f0f0f);
+    border: 3px solid #ff4444;
+    border-radius: 30px;
+    padding: 25px;
+    margin-top: 30px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #ffa8a8;
+    text-transform: uppercase;
+    box-shadow: 0 0 30px #ff0000;
+    animation: aboutAdPulse 3s infinite;
+}
+
+@keyframes aboutAdPulse {
+    0% { box-shadow: 0 0 20px #ff0000; }
+    50% { box-shadow: 0 0 50px #ff6666; }
+    100% { box-shadow: 0 0 20px #ff0000; }
+}
+
+.about-ad small {
+    font-size: 16px;
+    display: block;
+    color: #ff99cc;
+}
+
+.footer-note {
+    margin-top: 30px;
+    text-align: center;
+    color: #a55a5a;
+    border-top: 2px solid #8b2a2a;
+    padding-top: 15px;
+    font-size: clamp(14px, 4vw, 18px);
+    text-shadow: 0 0 8px #660000;
+}
+
+/* Скроллбар */
+::-webkit-scrollbar {
+    width: 12px;
+    background: #1f0303;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(145deg, #a52a2a, #ff4d4d);
+    border-radius: 20px;
+    border: 2px solid #b35959;
+    box-shadow: 0 0 10px #ff3333;
+}
+
+/* Медиа-запросы для адаптивности */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    
+    .header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .tg-button, .tg-channel {
+        width: 100%;
+        text-align: center;
+        margin: 5px 0 !important;
+    }
+    
+    .activity-podium {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .place-bar {
+        max-width: 280px;
+    }
+    
+    .winners-grid {
+        justify-content: center;
+    }
+    
+    .winner-card {
+        max-width: 150px;
+    }
+    
+    .teacher-wheel {
+        height: 350px;
+    }
+    
+    .teacher-option {
+        padding: 12px 15px;
+        font-size: 18px;
+    }
+    
+    .bottom-panel {
+        flex-direction: column;
+    }
+    
+    .comments-block, .ad-block {
+        width: 100%;
+    }
+    
+    .polls-grid {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .site-title {
+        font-size: 32px;
+    }
+    
+    .school-btn {
+        font-size: 16px;
+        padding: 10px 12px;
+        min-width: 120px;
+    }
+    
+    .cat-btn {
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+    
+    .teacher-option {
+        font-size: 16px;
+        padding: 10px;
+    }
+    
+    .save-vote-btn {
+        font-size: 20px;
+        padding: 12px 20px;
+    }
+    
+    .winner-card {
+        max-width: 130px;
+    }
+    
+    .winner-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+    }
+    
+    .place-1 .place-bar {
+        min-height: 180px;
+    }
+    
+    .place-2 .place-bar {
+        min-height: 140px;
+    }
+    
+    .place-3 .place-bar {
+        min-height: 110px;
+    }
+}
