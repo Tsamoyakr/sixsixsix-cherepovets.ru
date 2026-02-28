@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SixSixSix_ZAEBIS | Тест</title>
+</head>
+<body style="background: #1a1a1a; color: #ffcccc; font-family: Arial; padding: 20px;">
+    <h1>SixSixSix ZAEBIS - ТЕСТ</h1>
+    
+    <div class="container">
+        <div class="header">
+            <div class="site-title">SixSixSix_ZAEBIS</div>
+            <a href="https://t.me/SixSixSix_ZAEBIS_bot" target="_blank" class="tg-button">TG BOT</a>
+        </div>
+
+        <div class="nav-menu">
+            <div class="nav-item active-nav">🏠 ГЛАВНАЯ</div>
+            <div class="nav-item">📊 РЕЙТИНГИ</div>
+            <div class="nav-item">🏫 ШКОЛЫ</div>
+            <div class="nav-item">💡 ПРЕДЛОЖЕНИЯ</div>
+            <div class="nav-item">🔥 О ПРОЕКТЕ</div>
+        </div>
+
+        <div class="school-activity">
+            <div class="activity-title">⚡ РЕЙТИНГ АКТИВНОСТИ ШКОЛ ⚡</div>
+            <div id="activityPodium"></div>
+        </div>
+
+        <div class="winners-section">
+            <div class="winners-title">👑 ПОБЕДИТЕЛИ РАЙОНА 👑</div>
+            <div class="winners-grid" id="winnersGrid"></div>
+            <div class="timer-block" id="timerDisplay">ОБНОВЛЕНИЕ ЧЕРЕЗ: --д --ч --м</div>
+        </div>
+
+        <div class="info-box">
+            <div class="info-title">🔞 КАК ЭТО РАБОТАЕТ?</div>
+            <div class="info-text">
+                🔥 Выбирай школу → крути рулетку → жми СОХРАНИТЬ!
+            </div>
+        </div>
+
+        <div class="selection-panel">
+            <div class="school-btn active" data-school="33">33 ШКОЛА</div>
+            <div class="school-btn" data-school="13">13 ШКОЛА</div>
+            <div class="school-btn" data-school="29">29 ШКОЛА</div>
+            <div class="school-btn raion" data-school="raion">РАЙОН</div>
+        </div>
+
+        <div class="school-filter" id="schoolFilter" style="display: none;">
+            <div class="filter-btn active-filter" data-filter-school="all">Все школы</div>
+            <div class="filter-btn" data-filter-school="33">33 школа</div>
+            <div class="filter-btn" data-filter-school="13">13 школа</div>
+            <div class="filter-btn" data-filter-school="29">29 школа</div>
+        </div>
+
+        <div class="roulette-container">
+            <div class="category-tabs">
+                <div class="cat-btn active-cat" data-cat="sexy">💋 Самая секси</div>
+                <div class="cat-btn" data-cat="good">😇 Самая добрая</div>
+                <div class="cat-btn" data-cat="mraz">👿 Самая мразота</div>
+                <div class="cat-btn" data-cat="fun">🔥 Самая угарная</div>
+                <div class="cat-btn" data-cat="chill">😎 Чиловый мужик</div>
+            </div>
+
+            <div class="selection-area">
+                <div class="teacher-wheel" id="teacherWheel"></div>
+                <button class="save-vote-btn" id="saveVoteBtn" disabled>💾 СОХРАНИТЬ ВЫБОР</button>
+            </div>
+        </div>
+
+        <div class="school-leaders" id="schoolLeadersBlock">
+            <div class="leaders-title">ЛИДЕРЫ ШКОЛЫ 33</div>
+            <div class="leaders-grid" id="leadersGrid"></div>
+        </div>
+
+        <div class="bottom-panel">
+            <div class="comments-block">
+                <div class="comments-title">💬 КОММЕНТАРИИ</div>
+                <div class="comment-list" id="commentList"></div>
+                <div class="comment-input-area">
+                    <input type="text" class="nick-input" id="nickInput" placeholder="ник...">
+                    <input type="text" class="comment-input" id="commentInput" placeholder="комментарий...">
+                    <button class="comment-send" id="sendComment">🔥 ОТПРАВИТЬ</button>
+                </div>
+            </div>
+            <div class="ad-block">
+                <div class="ad-banner">🔞 РЕКЛАМА</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ВАЖНО: правильное подключение скрипта -->
+    <script type="module" src="script.js"></script>
+</body>
+</html>

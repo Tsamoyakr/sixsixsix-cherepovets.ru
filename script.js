@@ -1,33 +1,23 @@
-// ========== НАСТРОЙКИ FIREBASE ==========
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
+console.log('🔥 СКРИПТ ЗАГРУЗИЛСЯ!');
 
-const firebaseConfig = {
-    apiKey: "AIzaSyCRgQ7y14HmmNEXXLqNMqjOLMUJzWCoHwc",
-    authDomain: "sixsix-b1743.firebaseapp.com",
-    databaseURL: "https://sixsix-b1743-default-rtdb.firebaseio.com",
-    projectId: "sixsix-b1743",
-    storageBucket: "sixsix-b1743.firebasestorage.app",
-    messagingSenderId: "773352016608",
-    appId: "1:773352016608:web:a1f825b1751f8cfd085e85"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-// ========================================
-
-console.log('✅ Firebase подключен!');
-
-// Простые переменные
-let counter = 0;
-
-// Ждём загрузки страницы
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('✅ Страница загружена');
+    console.log('🔥 СТРАНИЦА ЗАГРУЖЕНА!');
     
-    // 1. ПРОВЕРКА КНОПОК - добавим тестовую кнопку
-    const mainContainer = document.querySelector('.container');
-    if (mainContainer) {
+    // Проверяем, видит ли скрипт кнопки
+    const buttons = document.querySelectorAll('button');
+    console.log('Найдено кнопок:', buttons.length);
+    
+    // Добавляем обработчик на все кнопки
+    buttons.forEach((btn, index) => {
+        btn.addEventListener('click', function() {
+            alert(`Кнопка ${index} нажата: ${this.innerText}`);
+            console.log('Клик по кнопке:', this.innerText);
+        });
+    });
+    
+    // Добавляем тестовый блок на страницу
+    const container = document.querySelector('.container');
+    if (container) {
         const testDiv = document.createElement('div');
         testDiv.style.background = '#00aa00';
         testDiv.style.color = 'white';
@@ -36,88 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
         testDiv.style.borderRadius = '10px';
         testDiv.style.textAlign = 'center';
         testDiv.style.fontSize = '20px';
-        testDiv.innerHTML = `
-            <div>🔥 ТЕСТОВЫЙ РЕЖИМ 🔥</div>
-            <button id="testBtn" style="padding:10px 20px; margin:10px; background:#ff0000; color:white; border:none; border-radius:5px; cursor:pointer;">НАЖМИ МЕНЯ</button>
-            <div id="testResult">Кнопка не нажата</div>
-        `;
-        mainContainer.prepend(testDiv);
-        
-        // Обработчик тестовой кнопки
-        document.getElementById('testBtn').addEventListener('click', function() {
-            counter++;
-            document.getElementById('testResult').innerHTML = `✅ Кнопка работает! Нажата ${counter} раз`;
-            console.log('✅ Тестовая кнопка нажата!');
-        });
-    }
-    
-    // 2. ПРОВЕРКА FIREBASE
-    const testRef = ref(db, 'test');
-    
-    // Запись в Firebase
-    set(testRef, {
-        message: 'Привет от устройства!',
-        time: Date.now(),
-        deviceId: 'test_' + Math.random()
-    }).then(() => {
-        console.log('✅ Запись в Firebase успешна');
-    }).catch(error => {
-        console.error('❌ Ошибка записи в Firebase:', error);
-    });
-    
-    // Чтение из Firebase
-    get(testRef).then((snapshot) => {
-        if (snapshot.exists()) {
-            console.log('✅ Данные из Firebase:', snapshot.val());
-        }
-    }).catch(error => {
-        console.error('❌ Ошибка чтения из Firebase:', error);
-    });
-    
-    // 3. ПРОВЕРКА СУЩЕСТВУЮЩИХ КНОПОК
-    const saveBtn = document.getElementById('saveVoteBtn');
-    if (saveBtn) {
-        console.log('✅ Кнопка сохранения найдена');
-        saveBtn.addEventListener('click', function() {
-            alert('✅ Кнопка СОХРАНИТЬ ВЫБОР работает!');
-        });
-    } else {
-        console.log('❌ Кнопка сохранения НЕ найдена - проверь id="saveVoteBtn" в HTML');
-    }
-    
-    const sendCommentBtn = document.getElementById('sendComment');
-    if (sendCommentBtn) {
-        console.log('✅ Кнопка комментария найдена');
-        sendCommentBtn.addEventListener('click', function() {
-            alert('✅ Кнопка ОТПРАВИТЬ работает!');
-        });
-    } else {
-        console.log('❌ Кнопка комментария НЕ найдена - проверь id="sendComment" в HTML');
-    }
-    
-    // Проверяем все кнопки школы
-    const schoolBtns = document.querySelectorAll('.school-btn');
-    if (schoolBtns.length > 0) {
-        console.log(`✅ Найдено ${schoolBtns.length} кнопок школы`);
-        schoolBtns.forEach((btn, index) => {
-            btn.addEventListener('click', function() {
-                alert(`✅ Нажата кнопка: ${this.innerText}`);
-            });
-        });
-    } else {
-        console.log('❌ Кнопки школы НЕ найдены - проверь class="school-btn" в HTML');
-    }
-    
-    // Проверяем кнопки категорий
-    const catBtns = document.querySelectorAll('.cat-btn');
-    if (catBtns.length > 0) {
-        console.log(`✅ Найдено ${catBtns.length} кнопок категорий`);
-        catBtns.forEach((btn, index) => {
-            btn.addEventListener('click', function() {
-                alert(`✅ Нажата категория: ${this.innerText}`);
-            });
-        });
-    } else {
-        console.log('❌ Кнопки категорий НЕ найдены - проверь class="cat-btn" в HTML');
+        testDiv.innerHTML = '✅ СКРИПТ РАБОТАЕТ! Все кнопки должны работать.';
+        container.prepend(testDiv);
     }
 });
