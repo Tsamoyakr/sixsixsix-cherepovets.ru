@@ -17,8 +17,6 @@
         <!-- Меню навигации -->
         <div class="nav-menu">
             <div class="nav-item active-nav" data-nav="main">🏠 Главная</div>
-            <div class="nav-item" data-nav="rating">📊 Рейтинги</div>
-            <div class="nav-item" data-nav="schools">🏫 Школы</div>
             <div class="nav-item" data-nav="suggestions">💡 Предложения</div>
             <div class="nav-item" data-nav="about">🔥 О проекте</div>
         </div>
@@ -96,8 +94,52 @@
                 </div>
             </div>
             <div class="ad-block">
-                <div class="ad-banner">🔞 ПОШЛАЯ РЕКЛАМА<br><small>тут мог быть твой притон</small></div>
-                <div class="ad-banner">💀 АДМИНСКАЯ РЕКЛАМА<br><small>пиши в тг боте</small></div>
+                <div class="ad-banner">🔞 ПОШЛАЯ РЕКЛАМА 1<br><small>тут мог быть твой притон</small></div>
+                <div class="ad-banner">💀 АДМИНСКАЯ РЕКЛАМА 1<br><small>пиши в тг боте</small></div>
+                <div class="ad-banner">🔞 ПОШЛАЯ РЕКЛАМА 2<br><small>18+ только здесь</small></div>
+                <div class="ad-banner">💀 АДМИНСКАЯ РЕКЛАМА 2<br><small>реклама твоего бизнеса</small></div>
+            </div>
+        </div>
+
+        <!-- Секция предложений -->
+        <div class="suggestions-section" id="suggestionsSection" style="display: none;">
+            <div class="suggestions-title">💡 ПРЕДЛОЖЕНИЯ И ГОЛОСОВАНИЯ</div>
+            
+            <!-- TG Канал блок -->
+            <div class="tg-channel-block">
+                <div class="tg-channel-title">📢 НОВОСТИ И ОБНОВЛЕНИЯ</div>
+                <div class="tg-channel-text">Все новости, обновления и анонсы публикуются в нашем Telegram-канале</div>
+                <a href="https://t.me/+0asI7j0d65Q2NDBi" target="_blank" class="tg-channel-button">🔥 ПОДПИСАТЬСЯ 🔥</a>
+            </div>
+            
+            <!-- Голосования -->
+            <div class="polls-container">
+                <div class="poll-title">🔥 ГОРЯЧИЕ ГОЛОСОВАНИЯ</div>
+                <div class="polls-grid" id="pollsGrid"></div>
+            </div>
+
+            <!-- Топ предложений -->
+            <div class="top-suggestions-container" id="topSuggestions"></div>
+
+            <!-- Форма предложений -->
+            <div class="suggestion-form">
+                <div class="form-title">📝 ОСТАВИТЬ ПРЕДЛОЖЕНИЕ</div>
+                <input type="text" class="suggestion-nick" id="suggestionNick" placeholder="твой ник..." maxlength="20">
+                <select class="suggestion-school" id="suggestionSchool">
+                    <option value="">Выбери школу</option>
+                    <option value="33">33 школа</option>
+                    <option value="13">13 школа</option>
+                    <option value="29">29 школа</option>
+                    <option value="raion">Район</option>
+                </select>
+                <textarea class="suggestion-text" id="suggestionText" placeholder="твоё предложение..." rows="3" maxlength="200"></textarea>
+                <button class="suggestion-send" id="sendSuggestion">🔥 ОТПРАВИТЬ ПРЕДЛОЖЕНИЕ</button>
+            </div>
+
+            <!-- Список предложений -->
+            <div class="suggestions-list">
+                <div class="list-title">📋 ВСЕ ПРЕДЛОЖЕНИЯ</div>
+                <div id="suggestionsContainer"></div>
             </div>
         </div>
 
