@@ -16,114 +16,61 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 // ========================================
 
+// ===== НАСТРОЙКИ TELEGRAM =====
+const TELEGRAM_TOKEN = '7710917089:AAFmTgJjmWxeQ2eBLiEL8KCifZ994jOUNGA';
+const TELEGRAM_CHAT_ID = '1269630089';
+// ===============================
+
 console.log('🔥 Firebase версия загружена');
 
-// ===== КЭШ И ОПТИМИЗАЦИЯ =====
-const cache = {
-    teachers: null,
-    scores: null,
-    lastScoreUpdate: 0,
-    domElements: {}
+// ===== БАЗА ДАННЫХ УЧИТЕЛЕЙ =====
+const teachersDB = {
+    "29": [
+        "Горчакова Анжелика Николаевна", "Шукова Ольга Анатольевна", "Якунов Даниил Александрович",
+        "Алексеевцева Валерия Дмитриевна", "Белоброва Любовь Владимировна", "Воробьева Анастасия Игоревна",
+        "Елина Ирина Алексеевна", "Ефремова Галина Валерьевна", "Загоскина Евгения Петровна",
+        "Заморкина Светлана Анатольевна", "Занина Ирина Юрьевна", "Зубова Лариса Венеаминовна",
+        "Королькова Светлана Геннадьевна", "Кузнецов Николай Константинович", "Мазилова Виктория Вячеславовна",
+        "Мегельбей Полина Сергеевна", "Зенкова Татьяна Александровна", "Ольнова Ирина Валентиновна",
+        "Петрова Анастасия Викторовна", "Проворова Карина Александровна", "Ратькова Людмила Александровна",
+        "Столярова Ольга Александровна", "Таничева Мария Владимировна", "Туманова Ольга Николаевна",
+        "Хамова Наталья Михайловна"
+    ],
+    "33": [
+        "Расторопова Алена Игоревна", "Кудряшова Вера Григорьевна", "Ярошенко Наталья Николаевна",
+        "Шутова Любовь Сергеевна", "Шкокова Елена Евгеньевна", "Хухарева Елена Юрьевна",
+        "Харламова Татьяна Александровна", "Фомина Ирина Ивановна", "Титаренко Оксана Николаевна",
+        "Таланова Наталья Александровна", "Скорюкова Екатерина Ивановна", "Ситникова Ольга Викторовна",
+        "Сёмина Жанна Николаевна", "Сахарова Валентина Васильевна", "Руденко Любовь Николаевна",
+        "Рескова Светлана Юрьевна", "Павлова Ирина Анатольевна", "Оленева Светлана Александровна",
+        "Никандрова Наталья Александровна", "Нивина Любовь Николаевна", "Мартынова Наталия Николаевна",
+        "Маракова Надежда Алфеевна", "Магомедова Ирина Ивановна", "Лучкинская Ирина Валентиновна",
+        "Кустова Аксана Владимировна", "Куликова Елена Леонидовна", "Кузьмина Анна Владимировна",
+        "Клочков Алексей Александрович", "Иевлева Татьяна Владимировна", "Жилина Мария Вадимовна",
+        "Нестерова Анжелика Михайловна", "Дьякова Елена Павловна", "Плужникова Анна Дмитриевна",
+        "Дьякова Юлия Сергеевна", "Иванова Елена Валентиновна", "Викторова Татьяна Анатольевна",
+        "Андреева Вера Сергеевна", "Акимова Светлана Петровна"
+    ],
+    "13": [
+        "Агеева Марина Анатольевна", "Антончик Светлана Вячеславовна", "Беляева Анна Павловна",
+        "Беляева Ольга Сергеевна", "Билькова Оксана Алексеевна", "Борисова Юлия Викторовна",
+        "Булындина Светлана Дмитриевна", "Быстрова Екатерина Сергеевна", "Викторова Ольга Викторовна",
+        "Гайдов Владимир Валентинович", "Дурягина Людмила Сергеевна", "Зайцева Виктория Николаевна",
+        "Игнатьева Светлана Анатольевна", "Казакова Евгения Николаевна", "Клягина Светлана Михайловна",
+        "Короп Лариса Владимировна", "Коряковская Светлана Анатольевна", "Кудрявцева Анастасия Николаевна",
+        "Кузнецова Валентина Александровна", "Красильникова Александра Васильевна", "Лыгина Наталия Николаевна",
+        "Мальцева Евгения Станиславовна", "Мальцева Мария Олеговна", "Мартынов Павел Сергеевич",
+        "Мастакова Светлана Евгеньевна", "Меньшикова Татьяна Константиновна", "Митюкова Елена Анатольевна",
+        "Морозова Елена Николаевна", "Морозова Анастасия Владимировна", "Немирович Мария Вячеславовна",
+        "Никитенко Яна Валерьевна", "Николина Марина Николаевна", "Неклюдова Алёна Сергеевна",
+        "Петухова Татьяна Валерьевна", "Петуховская Наталья Геннадьевна", "Пенькова Анна Александровна",
+        "Распутина Ирина Леонидовна", "Расторопова Алена Игоревна", "Сверчкова Наталья Владимировна",
+        "Сергеева Елена Николаевна", "Серобабена Галина Васильевна", "Смирнова Елена Вячеславовна",
+        "Соловьева Нина Валерьевна", "Сорокина Екатерина Алексеевна", "Степанова Лариса Владимировна",
+        "Сиволап Даниил Андреевич", "Таничева Виктория Дмитриевна", "Тикунова Жанна Валерьевна",
+        "Торочкова Александра Андреевна", "Тырнова Ольга Владимировна", "Трубаева Людмила Васильевна"
+    ]
 };
-
-// Функция для замера производительности
-const perf = {
-    marks: {},
-    start(name) { this.marks[name] = performance.now(); },
-    end(name) { 
-        const time = performance.now() - this.marks[name];
-        if (time > 50) console.warn(`⚠️ ${name}: ${time.toFixed(2)}мс`);
-        return time;
-    }
-};
-
-// Debounce функция для частых обновлений
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
-
-// Пакетное сохранение в Firebase
-let pendingChanges = {};
-let saveTimer;
-
-function queueSave(path, data) {
-    pendingChanges[path] = data;
-    
-    clearTimeout(saveTimer);
-    saveTimer = setTimeout(async () => {
-        if (Object.keys(pendingChanges).length === 0) return;
-        
-        try {
-            await update(ref(db), pendingChanges);
-            console.log('✅ Пакетное сохранение:', Object.keys(pendingChanges));
-            pendingChanges = {};
-        } catch (error) {
-            console.error('❌ Ошибка пакетного сохранения:', error);
-        }
-    }, 2000);
-}
-
-// ===== БАЗА ДАННЫХ УЧИТЕЛЕЙ (кешируем) =====
-function getTeachersDB() {
-    if (!cache.teachers) {
-        cache.teachers = {
-            "29": [
-                "Горчакова Анжелика Николаевна", "Шукова Ольга Анатольевна", "Якунов Даниил Александрович",
-                "Алексеевцева Валерия Дмитриевна", "Белоброва Любовь Владимировна", "Воробьева Анастасия Игоревна",
-                "Елина Ирина Алексеевна", "Ефремова Галина Валерьевна", "Загоскина Евгения Петровна",
-                "Заморкина Светлана Анатольевна", "Занина Ирина Юрьевна", "Зубова Лариса Венеаминовна",
-                "Королькова Светлана Геннадьевна", "Кузнецов Николай Константинович", "Мазилова Виктория Вячеславовна",
-                "Мегельбей Полина Сергеевна", "Зенкова Татьяна Александровна", "Ольнова Ирина Валентиновна",
-                "Петрова Анастасия Викторовна", "Проворова Карина Александровна", "Ратькова Людмила Александровна",
-                "Столярова Ольга Александровна", "Таничева Мария Владимировна", "Туманова Ольга Николаевна",
-                "Хамова Наталья Михайловна"
-            ],
-            "33": [
-                "Расторопова Алена Игоревна", "Кудряшова Вера Григорьевна", "Ярошенко Наталья Николаевна",
-                "Шутова Любовь Сергеевна", "Шкокова Елена Евгеньевна", "Хухарева Елена Юрьевна",
-                "Харламова Татьяна Александровна", "Фомина Ирина Ивановна", "Титаренко Оксана Николаевна",
-                "Таланова Наталья Александровна", "Скорюкова Екатерина Ивановна", "Ситникова Ольга Викторовна",
-                "Сёмина Жанна Николаевна", "Сахарова Валентина Васильевна", "Руденко Любовь Николаевна",
-                "Рескова Светлана Юрьевна", "Павлова Ирина Анатольевна", "Оленева Светлана Александровна",
-                "Никандрова Наталья Александровна", "Нивина Любовь Николаевна", "Мартынова Наталия Николаевна",
-                "Маракова Надежда Алфеевна", "Магомедова Ирина Ивановна", "Лучкинская Ирина Валентиновна",
-                "Кустова Аксана Владимировна", "Куликова Елена Леонидовна", "Кузьмина Анна Владимировна",
-                "Клочков Алексей Александрович", "Иевлева Татьяна Владимировна", "Жилина Мария Вадимовна",
-                "Нестерова Анжелика Михайловна", "Дьякова Елена Павловна", "Плужникова Анна Дмитриевна",
-                "Дьякова Юлия Сергеевна", "Иванова Елена Валентиновна", "Викторова Татьяна Анатольевна",
-                "Андреева Вера Сергеевна", "Акимова Светлана Петровна"
-            ],
-            "13": [
-                "Агеева Марина Анатольевна", "Антончик Светлана Вячеславовна", "Беляева Анна Павловна",
-                "Беляева Ольга Сергеевна", "Билькова Оксана Алексеевна", "Борисова Юлия Викторовна",
-                "Булындина Светлана Дмитриевна", "Быстрова Екатерина Сергеевна", "Викторова Ольга Викторовна",
-                "Гайдов Владимир Валентинович", "Дурягина Людмила Сергеевна", "Зайцева Виктория Николаевна",
-                "Игнатьева Светлана Анатольевна", "Казакова Евгения Николаевна", "Клягина Светлана Михайловна",
-                "Короп Лариса Владимировна", "Коряковская Светлана Анатольевна", "Кудрявцева Анастасия Николаевна",
-                "Кузнецова Валентина Александровна", "Красильникова Александра Васильевна", "Лыгина Наталия Николаевна",
-                "Мальцева Евгения Станиславовна", "Мальцева Мария Олеговна", "Мартынов Павел Сергеевич",
-                "Мастакова Светлана Евгеньевна", "Меньшикова Татьяна Константиновна", "Митюкова Елена Анатольевна",
-                "Морозова Елена Николаевна", "Морозова Анастасия Владимировна", "Немирович Мария Вячеславовна",
-                "Никитенко Яна Валерьевна", "Николина Марина Николаевна", "Неклюдова Алёна Сергеевна",
-                "Петухова Татьяна Валерьевна", "Петуховская Наталья Геннадьевна", "Пенькова Анна Александровна",
-                "Распутина Ирина Леонидовна", "Расторопова Алена Игоревна", "Сверчкова Наталья Владимировна",
-                "Сергеева Елена Николаевна", "Серобабена Галина Васильевна", "Смирнова Елена Вячеславовна",
-                "Соловьева Нина Валерьевна", "Сорокина Екатерина Алексеевна", "Степанова Лариса Владимировна",
-                "Сиволап Даниил Андреевич", "Таничева Виктория Дмитриевна", "Тикунова Жанна Валерьевна",
-                "Торочкова Александра Андреевна", "Тырнова Ольга Владимировна", "Трубаева Людмила Васильевна"
-            ]
-        };
-    }
-    return cache.teachers;
-}
 
 // Список учителей мужского пола
 const maleTeachers = [
@@ -145,32 +92,43 @@ if (!deviceId) {
     localStorage.setItem('deviceId', deviceId);
 }
 
-// Данные с проверками
+// Данные
 let votes = { "33": {}, "13": {}, "29": {}, "raion": {} };
 let comments = { "33": [], "13": [], "29": [], "raion": [] };
 let commentLikes = {};
-let suggestions = [];
-let suggestionLikes = {};
-let polls = [
-    {
-        id: 1,
-        question: "Устроить батл школ?",
-        options: ["Да", "Нет", "Воздержусь"],
-        votes: { "Да": [], "Нет": [], "Воздержусь": [] }
-    },
-    {
-        id: 2,
-        question: "Делать еженедельные битвы?",
-        options: ["За", "Против", "Мне всё равно"],
-        votes: { "За": [], "Против": [], "Мне всё равно": [] }
-    },
-    {
-        id: 3,
-        question: "Делать батлы среди учеников?",
-        options: ["Да", "Нет"],
-        votes: { "Да": [], "Нет": [] }
+
+// ===== ФУНКЦИЯ ОТПРАВКИ В TELEGRAM =====
+async function sendToTelegram(suggestion) {
+    const message = `📝 *Новое предложение!*\n\n` +
+                   `👤 *Ник:* ${suggestion.nick}\n` +
+                   `🏫 *Школа:* ${suggestion.school}\n` +
+                   `💬 *Текст:* ${suggestion.text}\n` +
+                   `🕐 *Время:* ${new Date().toLocaleString()}`;
+    
+    try {
+        const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: TELEGRAM_CHAT_ID,
+                text: message,
+                parse_mode: 'Markdown'
+            })
+        });
+        
+        const data = await response.json();
+        if (data.ok) {
+            console.log('✅ Отправлено в Telegram');
+            return true;
+        } else {
+            console.error('❌ Ошибка Telegram:', data);
+            return false;
+        }
+    } catch (error) {
+        console.error('❌ Ошибка отправки:', error);
+        return false;
     }
-];
+}
 
 // ===== СОЗДАЁМ СЕКЦИЮ "О ПРОЕКТЕ" =====
 function createAboutSection() {
@@ -199,108 +157,72 @@ function createAboutSection() {
     container.appendChild(aboutSection);
 }
 
-// ===== ФУНКЦИИ FIREBASE (ОПТИМИЗИРОВАННЫЕ) =====
+// ===== ФУНКЦИИ FIREBASE =====
 async function loadFromFirebase() {
-    perf.start('loadFromFirebase');
-    
     try {
-        // Загружаем всё одним запросом
-        const rootRef = ref(db, '/');
-        const snapshot = await get(rootRef);
-        
-        if (snapshot.exists()) {
-            const data = snapshot.val();
-            
-            // Обновляем только изменившиеся данные
-            if (data.votes && JSON.stringify(votes) !== JSON.stringify(data.votes)) {
-                votes = data.votes;
-            }
-            if (data.comments && JSON.stringify(comments) !== JSON.stringify(data.comments)) {
-                comments = data.comments;
-            }
-            if (data.commentLikes && JSON.stringify(commentLikes) !== JSON.stringify(data.commentLikes)) {
-                commentLikes = data.commentLikes;
-            }
-            if (data.suggestions && JSON.stringify(suggestions) !== JSON.stringify(data.suggestions)) {
-                suggestions = data.suggestions;
-            }
-            if (data.suggestionLikes && JSON.stringify(suggestionLikes) !== JSON.stringify(data.suggestionLikes)) {
-                suggestionLikes = data.suggestionLikes;
-            }
-            if (data.polls && JSON.stringify(polls) !== JSON.stringify(data.polls)) {
-                polls = data.polls;
-            }
-
-            console.log(`✅ Данные загружены за ${perf.end('loadFromFirebase').toFixed(2)}мс`);
-            
-            // Асинхронное обновление UI
-            setTimeout(() => {
-                updateAllDisplays();
-                if (currentNav === 'suggestions') {
-                    renderSuggestions();
-                    renderPolls();
-                }
-            }, 0);
+        const votesRef = ref(db, 'votes');
+        const votesSnap = await get(votesRef);
+        if (votesSnap.exists()) {
+            votes = votesSnap.val();
         }
+
+        const commentsRef = ref(db, 'comments');
+        const commentsSnap = await get(commentsRef);
+        if (commentsSnap.exists()) {
+            comments = commentsSnap.val();
+        }
+
+        const commentLikesRef = ref(db, 'commentLikes');
+        const commentLikesSnap = await get(commentLikesRef);
+        if (commentLikesSnap.exists()) {
+            commentLikes = commentLikesSnap.val();
+        }
+
+        console.log('✅ Все данные загружены');
+        updateAllDisplays();
     } catch (error) {
         console.error('❌ Ошибка загрузки из Firebase:', error);
     }
 }
 
 async function saveToFirebase() {
-    perf.start('saveToFirebase');
-    
     try {
-        // Используем пакетное обновление
-        const updates = {
-            '/votes': votes,
-            '/comments': comments,
-            '/commentLikes': commentLikes,
-            '/suggestions': suggestions,
-            '/suggestionLikes': suggestionLikes,
-            '/polls': polls
-        };
-        
-        await update(ref(db), updates);
-        console.log(`✅ Данные сохранены за ${perf.end('saveToFirebase').toFixed(2)}мс`);
+        await set(ref(db, 'votes'), votes);
+        await set(ref(db, 'comments'), comments);
+        await set(ref(db, 'commentLikes'), commentLikes);
+        console.log('✅ Все данные сохранены в Firebase');
     } catch (error) {
         console.error('❌ Ошибка сохранения в Firebase:', error);
     }
 }
 
 function subscribeToUpdates() {
-    // Одна подписка на все изменения
-    const rootRef = ref(db, '/');
-    onValue(rootRef, (snapshot) => {
-        if (!snapshot.exists()) return;
-        
-        const data = snapshot.val();
-        let needsUpdate = false;
-        
-        if (data.votes) { votes = data.votes; needsUpdate = true; }
-        if (data.comments) { comments = data.comments; needsUpdate = true; }
-        if (data.commentLikes) { commentLikes = data.commentLikes; needsUpdate = true; }
-        if (data.suggestions) { suggestions = data.suggestions; needsUpdate = true; }
-        if (data.suggestionLikes) { suggestionLikes = data.suggestionLikes; needsUpdate = true; }
-        if (data.polls) { polls = data.polls; needsUpdate = true; }
-        
-        if (needsUpdate) {
-            // Используем debounce для частых обновлений
-            debouncedUpdate();
+    const votesRef = ref(db, 'votes');
+    onValue(votesRef, (snapshot) => {
+        if (snapshot.exists()) {
+            votes = snapshot.val();
+            updateAllDisplays();
+        }
+    });
+
+    const commentsRef = ref(db, 'comments');
+    onValue(commentsRef, (snapshot) => {
+        if (snapshot.exists()) {
+            comments = snapshot.val();
+            renderComments();
+        }
+    });
+
+    const commentLikesRef = ref(db, 'commentLikes');
+    onValue(commentLikesRef, (snapshot) => {
+        if (snapshot.exists()) {
+            commentLikes = snapshot.val();
+            renderComments();
         }
     });
 }
 
-// Debounced обновление интерфейса
-const debouncedUpdate = debounce(() => {
-    updateAllDisplays();
-    if (currentNav === 'suggestions') {
-        renderSuggestions();
-        renderPolls();
-    }
-}, 100);
-
-// ===== ФУНКЦИИ ИНТЕРФЕЙСА (ОПТИМИЗИРОВАННЫЕ) =====
+// ===== ФУНКЦИИ ИНТЕРФЕЙСА =====
 function updateAllDisplays() {
     updateActivityPodium();
     renderWinnersDistrict();
@@ -309,99 +231,65 @@ function updateAllDisplays() {
 }
 
 function getFilteredTeachers() {
-    const teachers = getTeachersDB();
-    let result = [];
-    
+    let teachers = [];
     if (currentSchool === 'raion') {
         if (filterSchool === 'all') {
-            result = [...teachers["33"], ...teachers["13"], ...teachers["29"]];
+            teachers = [...teachersDB["33"], ...teachersDB["13"], ...teachersDB["29"]];
         } else {
-            result = teachers[filterSchool] || [];
+            teachers = teachersDB[filterSchool] || [];
         }
     } else {
-        result = teachers[currentSchool] || [];
+        teachers = teachersDB[currentSchool] || [];
     }
-    
     if (currentCategory === 'chill') {
-        result = result.filter(t => maleTeachers.includes(t));
+        teachers = teachers.filter(t => maleTeachers.includes(t));
     }
-    
-    return result;
+    return teachers;
 }
 
 function renderTeacherWheel() {
-    perf.start('renderTeacherWheel');
-    
     const wheel = document.getElementById('teacherWheel');
     if (!wheel) return;
     
     const teachersList = getFilteredTeachers();
-    
-    // Оптимизация: создаём фрагмент документа
-    const fragment = document.createDocumentFragment();
+    let html = '';
     
     teachersList.forEach(teacher => {
-        const div = document.createElement('div');
-        div.className = `teacher-option ${selectedTeacher === teacher ? 'selected-teacher' : ''}`;
-        div.dataset.teacher = teacher;
-        div.textContent = teacher;
-        fragment.appendChild(div);
+        const selectedClass = (selectedTeacher === teacher) ? 'selected-teacher' : '';
+        html += `<div class="teacher-option ${selectedClass}" data-teacher="${teacher}">${teacher}</div>`;
     });
     
-    wheel.innerHTML = '';
     if (teachersList.length === 0) {
-        wheel.innerHTML = '<div class="teacher-option">Нет учителей в этой категории</div>';
-    } else {
-        wheel.appendChild(fragment);
+        html = '<div class="teacher-option">Нет учителей в этой категории</div>';
     }
-
-    // Добавляем обработчики через делегирование
-    wheel.addEventListener('click', (e) => {
-        const option = e.target.closest('.teacher-option');
-        if (!option || !option.dataset.teacher) return;
-        
-        document.querySelectorAll('.teacher-option').forEach(opt => opt.classList.remove('selected-teacher'));
-        option.classList.add('selected-teacher');
-        selectedTeacher = option.dataset.teacher;
-        document.getElementById('saveVoteBtn').disabled = false;
-    });
     
-    perf.end('renderTeacherWheel');
+    wheel.innerHTML = html;
+
+    document.querySelectorAll('.teacher-option').forEach(el => {
+        el.addEventListener('click', function() {
+            document.querySelectorAll('.teacher-option').forEach(opt => opt.classList.remove('selected-teacher'));
+            this.classList.add('selected-teacher');
+            selectedTeacher = this.dataset.teacher;
+            document.getElementById('saveVoteBtn').disabled = false;
+        });
+    });
 }
 
-// Кэширование результатов сложных вычислений
-let cachedScores = null;
-let lastVoteChange = 0;
-
 function calculateSchoolScores() {
-    const now = Date.now();
-    if (cachedScores && now - lastVoteChange < 5000) {
-        return cachedScores;
-    }
-    
     const scores = { "33": 0, "13": 0, "29": 0 };
-    const schools = ["33", "13", "29"];
-    const cats = ['sexy', 'good', 'mraz', 'fun', 'chill'];
-    
-    for (let school of schools) {
-        const schoolVotes = votes[school];
-        if (!schoolVotes) continue;
-        
-        for (let cat of cats) {
-            const catVotes = schoolVotes[cat];
-            if (!catVotes) continue;
-            
-            for (let teacher in catVotes) {
-                const votesArray = catVotes[teacher];
-                if (votesArray?.length) {
-                    scores[school] += votesArray.length;
+    for (let school of ["33", "13", "29"]) {
+        if (votes[school]) {
+            for (let cat of ['sexy', 'good', 'mraz', 'fun', 'chill']) {
+                if (votes[school][cat]) {
+                    for (let teacher in votes[school][cat]) {
+                        if (votes[school][cat][teacher] && Array.isArray(votes[school][cat][teacher])) {
+                            scores[school] += votes[school][cat][teacher].length;
+                        }
+                    }
                 }
             }
         }
     }
-    
-    cachedScores = scores;
-    lastVoteChange = now;
     return scores;
 }
 
@@ -455,9 +343,8 @@ function updateActivityPodium() {
 }
 
 function getSchoolFromTeacher(teacher) {
-    const teachers = getTeachersDB();
     for (let school of ["33", "13", "29"]) {
-        if (teachers[school].includes(teacher)) {
+        if (teachersDB[school].includes(teacher)) {
             return school;
         }
     }
@@ -577,152 +464,6 @@ function renderComments() {
     list.innerHTML = html;
 }
 
-function renderPolls() {
-    const pollsGrid = document.getElementById('pollsGrid');
-    if (!pollsGrid) return;
-    
-    let html = '';
-    polls.forEach(poll => {
-        html += `
-            <div class="poll-item" data-poll-id="${poll.id}">
-                <div class="poll-question">${poll.question}</div>
-                <div class="poll-options">
-                    ${poll.options.map(opt => {
-                        const hasVoted = poll.votes[opt] && poll.votes[opt].includes(deviceId);
-                        return `
-                            <button class="poll-btn ${hasVoted ? 'active-poll' : ''}" data-option="${opt}">
-                                ${opt} (${poll.votes[opt] ? poll.votes[opt].length : 0})
-                            </button>
-                        `;
-                    }).join('')}
-                </div>
-            </div>
-        `;
-    });
-    
-    pollsGrid.innerHTML = html;
-}
-
-function renderSuggestions() {
-    console.log('📝 Рендерим предложения, всего:', suggestions ? suggestions.length : 0);
-    
-    const container = document.getElementById('suggestionsContainer');
-    const topContainer = document.getElementById('topSuggestions');
-    
-    if (!container) {
-        console.error('❌ Нет контейнера suggestionsContainer');
-        return;
-    }
-    
-    // Проверяем, что suggestions существует и является массивом
-    if (!suggestions || !Array.isArray(suggestions)) {
-        console.warn('⚠️ suggestions не массив, создаём пустой массив');
-        suggestions = [];
-    }
-    
-    // Проверяем, что suggestionLikes существует
-    if (!suggestionLikes || typeof suggestionLikes !== 'object') {
-        suggestionLikes = {};
-    }
-    
-    // Добавляем тестовые предложения, если их нет
-    if (suggestions.length === 0) {
-        suggestions.push({
-            id: 'test1_' + Date.now(),
-            nick: 'Тестер',
-            school: '33',
-            text: 'Это тестовое предложение 1',
-            deviceId: 'test',
-            timestamp: Date.now() - 100000
-        });
-        suggestions.push({
-            id: 'test2_' + Date.now(),
-            nick: 'Демон',
-            school: '13',
-            text: 'Это тестовое предложение 2',
-            deviceId: 'test',
-            timestamp: Date.now() - 50000
-        });
-    }
-    
-    // Сортируем предложения по лайкам для топа
-    const suggestionsWithLikes = suggestions.map(s => {
-        if (!s || typeof s !== 'object') return null;
-        
-        const likes = (suggestionLikes && s.id && suggestionLikes[s.id]) || { likes: [], dislikes: [] };
-        return {
-            ...s,
-            likeCount: likes.likes ? likes.likes.length : 0,
-            dislikeCount: likes.dislikes ? likes.dislikes.length : 0
-        };
-    }).filter(s => s !== null);
-    
-    // Топ-3 самых залайканных
-    const topSuggestions = [...suggestionsWithLikes]
-        .sort((a, b) => (b.likeCount || 0) - (a.likeCount || 0))
-        .slice(0, 3);
-    
-    console.log('Топ предложений:', topSuggestions);
-    
-    // Отображаем топ предложений
-    if (topContainer) {
-        let topHtml = '<div class="top-suggestions-title">🔥 ТОП ПРЕДЛОЖЕНИЙ 🔥</div>';
-        if (topSuggestions.length > 0) {
-            topSuggestions.forEach(s => {
-                topHtml += `
-                    <div class="top-suggestion-item">
-                        <div class="top-suggestion-author">${s.nick || 'Аноним'} (${s.school || '?'})</div>
-                        <div class="top-suggestion-text">${s.text || '...'}</div>
-                        <div class="top-suggestion-likes">👍 ${s.likeCount || 0}</div>
-                    </div>
-                `;
-            });
-        } else {
-            topHtml += '<div class="top-suggestion-item">Пока нет предложений</div>';
-        }
-        topContainer.innerHTML = topHtml;
-    }
-    
-    // Отображаем все предложения
-    let html = '';
-    if (suggestions.length > 0) {
-        suggestions.slice().reverse().forEach(s => {
-            if (!s || !s.id) return;
-            
-            const likes = (suggestionLikes && suggestionLikes[s.id]) || { likes: [], dislikes: [] };
-            const likeCount = likes.likes ? likes.likes.length : 0;
-            const dislikeCount = likes.dislikes ? likes.dislikes.length : 0;
-            
-            const userLike = likes.likes && likes.likes.includes(deviceId) ? 'active-like' : '';
-            const userDislike = likes.dislikes && likes.dislikes.includes(deviceId) ? 'active-dislike' : '';
-            
-            html += `
-                <div class="suggestion-item" data-suggestion-id="${s.id}">
-                    <div class="suggestion-meta">
-                        <span class="suggestion-author">${s.nick || 'Аноним'}</span>
-                        <span class="suggestion-school-tag">${s.school || '?'}</span>
-                        <span>${s.timestamp ? new Date(s.timestamp).toLocaleString() : 'неизвестно'}</span>
-                    </div>
-                    <div class="suggestion-content">${s.text || '...'}</div>
-                    <div class="suggestion-likes">
-                        <button class="like-btn ${userLike}" data-type="suggestion" data-action="like">👍</button>
-                        <span class="like-count">${likeCount}</span>
-                        <button class="dislike-btn ${userDislike}" data-type="suggestion" data-action="dislike">👎</button>
-                        <span class="dislike-count">${dislikeCount}</span>
-                    </div>
-                </div>
-            `;
-        });
-    }
-    
-    if (!html) {
-        html = '<div class="suggestion-item">Пока нет предложений. Будь первым!</div>';
-    }
-    
-    container.innerHTML = html;
-    console.log('✅ Предложения отрендерены');
-}
-
 // ===== ОБРАБОТЧИКИ СОБЫТИЙ =====
 document.addEventListener('DOMContentLoaded', function() {
     console.log('✅ Страница загружена');
@@ -772,8 +513,6 @@ document.addEventListener('DOMContentLoaded', function() {
             } else if (nav === 'suggestions') {
                 if (suggestionsSection) {
                     suggestionsSection.style.display = 'block';
-                    renderSuggestions();
-                    renderPolls();
                 }
             } else if (nav === 'about') {
                 if (aboutSection) aboutSection.style.display = 'block';
@@ -781,7 +520,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Голосование за учителей (используем queueSave)
+    // Голосование за учителей
     document.getElementById('saveVoteBtn')?.addEventListener('click', async function() {
         if (!selectedTeacher) {
             alert('Выбери учителя!');
@@ -798,21 +537,15 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!votes[currentSchool][currentCategory][selectedTeacher]) votes[currentSchool][currentCategory][selectedTeacher] = [];
         
         votes[currentSchool][currentCategory][selectedTeacher].push(deviceId);
-        
-        // Используем пакетное сохранение
-        queueSave('votes', votes);
+        await saveToFirebase();
         
         alert(`✅ Голос за ${selectedTeacher} учтён!`);
         document.getElementById('saveVoteBtn').disabled = true;
         selectedTeacher = null;
         document.querySelectorAll('.teacher-option').forEach(opt => opt.classList.remove('selected-teacher'));
-        
-        // Инвалидируем кэш
-        lastVoteChange = Date.now();
-        cachedScores = null;
     });
 
-    // Отправка комментария (используем queueSave)
+    // Отправка комментария
     document.getElementById('sendComment')?.addEventListener('click', async function() {
         const nickInput = document.getElementById('nickInput');
         const textInput = document.getElementById('commentInput');
@@ -833,14 +566,14 @@ document.addEventListener('DOMContentLoaded', function() {
             timestamp: Date.now()
         });
         
-        queueSave('comments', comments);
+        await saveToFirebase();
         renderComments();
         
         if (nickInput) nickInput.value = '';
         if (textInput) textInput.value = '';
     });
 
-    // Отправка предложения (используем queueSave)
+    // Отправка предложения в Telegram
     document.getElementById('sendSuggestion')?.addEventListener('click', async function() {
         console.log('🔥 Кнопка отправки предложения нажата');
         
@@ -859,126 +592,62 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        // Создаём новое предложение
+        // Создаём предложение
         const newSuggestion = {
-            id: 'sugg_' + Date.now() + '_' + Math.random().toString(36).substring(2),
             nick: nick,
             school: school,
-            text: text,
-            deviceId: deviceId,
-            timestamp: Date.now()
+            text: text
         };
         
-        console.log('Новое предложение:', newSuggestion);
+        // Отправляем в Telegram
+        const sent = await sendToTelegram(newSuggestion);
         
-        // Добавляем в массив
-        if (!suggestions || !Array.isArray(suggestions)) {
-            suggestions = [];
+        if (sent) {
+            alert('✅ Предложение отправлено в Telegram!');
+            
+            // Очищаем поля
+            if (nickInput) nickInput.value = '';
+            if (schoolSelect) schoolSelect.value = '';
+            if (textInput) textInput.value = '';
+        } else {
+            alert('❌ Ошибка при отправке. Попробуй ещё раз.');
         }
-        suggestions.push(newSuggestion);
-        
-        queueSave('suggestions', suggestions);
-        renderSuggestions();
-        
-        if (nickInput) nickInput.value = '';
-        if (schoolSelect) schoolSelect.value = '';
-        if (textInput) textInput.value = '';
-        
-        alert('✅ Предложение отправлено!');
     });
 
-    // Обработчики лайков (общий для комментариев и предложений)
+    // Обработчики лайков
     document.addEventListener('click', async function(e) {
         if (e.target.classList.contains('like-btn') || e.target.classList.contains('dislike-btn')) {
             const btn = e.target;
-            const type = btn.dataset.type; // 'comment' или 'suggestion'
+            const commentItem = btn.closest('.comment-item');
+            const commentId = commentItem?.dataset.commentId;
             const action = btn.dataset.action;
             
-            if (type === 'comment') {
-                const commentItem = btn.closest('.comment-item');
-                const commentId = commentItem?.dataset.commentId;
-                if (!commentId) return;
-                
-                if (!commentLikes[commentId]) {
-                    commentLikes[commentId] = { likes: [], dislikes: [] };
-                }
-                
-                const likes = commentLikes[commentId];
-                
-                if (action === 'like') {
-                    if (likes.likes.includes(deviceId)) {
-                        likes.likes = likes.likes.filter(id => id !== deviceId);
-                    } else {
-                        likes.likes.push(deviceId);
-                        likes.dislikes = likes.dislikes.filter(id => id !== deviceId);
-                    }
+            if (!commentId) return;
+            
+            if (!commentLikes[commentId]) {
+                commentLikes[commentId] = { likes: [], dislikes: [] };
+            }
+            
+            const likes = commentLikes[commentId];
+            
+            if (action === 'like') {
+                if (likes.likes.includes(deviceId)) {
+                    likes.likes = likes.likes.filter(id => id !== deviceId);
                 } else {
-                    if (likes.dislikes.includes(deviceId)) {
-                        likes.dislikes = likes.dislikes.filter(id => id !== deviceId);
-                    } else {
-                        likes.dislikes.push(deviceId);
-                        likes.likes = likes.likes.filter(id => id !== deviceId);
-                    }
+                    likes.likes.push(deviceId);
+                    likes.dislikes = likes.dislikes.filter(id => id !== deviceId);
                 }
-                
-                queueSave('commentLikes', commentLikes);
-                renderComments();
-            } else if (type === 'suggestion') {
-                const suggestionItem = btn.closest('.suggestion-item');
-                const suggestionId = suggestionItem?.dataset.suggestionId;
-                if (!suggestionId) return;
-                
-                if (!suggestionLikes[suggestionId]) {
-                    suggestionLikes[suggestionId] = { likes: [], dislikes: [] };
-                }
-                
-                const likes = suggestionLikes[suggestionId];
-                
-                if (action === 'like') {
-                    if (likes.likes.includes(deviceId)) {
-                        likes.likes = likes.likes.filter(id => id !== deviceId);
-                    } else {
-                        likes.likes.push(deviceId);
-                        likes.dislikes = likes.dislikes.filter(id => id !== deviceId);
-                    }
+            } else {
+                if (likes.dislikes.includes(deviceId)) {
+                    likes.dislikes = likes.dislikes.filter(id => id !== deviceId);
                 } else {
-                    if (likes.dislikes.includes(deviceId)) {
-                        likes.dislikes = likes.dislikes.filter(id => id !== deviceId);
-                    } else {
-                        likes.dislikes.push(deviceId);
-                        likes.likes = likes.likes.filter(id => id !== deviceId);
-                    }
-                }
-                
-                queueSave('suggestionLikes', suggestionLikes);
-                renderSuggestions();
-            }
-        }
-        
-        // Обработчики голосований
-        if (e.target.classList.contains('poll-btn')) {
-            const btn = e.target;
-            const pollItem = btn.closest('.poll-item');
-            const pollId = pollItem?.dataset.pollId;
-            const option = btn.dataset.option;
-            const poll = polls.find(p => p.id == pollId);
-            
-            if (!poll) return;
-            
-            for (let opt in poll.votes) {
-                if (poll.votes[opt].includes(deviceId)) {
-                    alert('Ты уже голосовал в этом опросе!');
-                    return;
+                    likes.dislikes.push(deviceId);
+                    likes.likes = likes.likes.filter(id => id !== deviceId);
                 }
             }
             
-            if (!poll.votes[option]) {
-                poll.votes[option] = [];
-            }
-            
-            poll.votes[option].push(deviceId);
-            queueSave('polls', polls);
-            renderPolls();
+            await saveToFirebase();
+            renderComments();
         }
     });
 
