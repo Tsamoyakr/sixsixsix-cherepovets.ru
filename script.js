@@ -87,7 +87,7 @@ if (!deviceId) {
     localStorage.setItem('deviceId', deviceId);
 }
 
-// Данные
+// Данные с проверками
 let votes = { "33": {}, "13": {}, "29": {}, "raion": {} };
 let comments = { "33": [], "13": [], "29": [], "raion": [] };
 let commentLikes = {};
@@ -311,7 +311,9 @@ function calculateSchoolScores() {
             for (let cat of ['sexy', 'good', 'mraz', 'fun', 'chill']) {
                 if (votes[school][cat]) {
                     for (let teacher in votes[school][cat]) {
-                        scores[school] += votes[school][cat][teacher].length;
+                        if (votes[school][cat][teacher] && Array.isArray(votes[school][cat][teacher])) {
+                            scores[school] += votes[school][cat][teacher].length;
+                        }
                     }
                 }
             }
@@ -388,7 +390,7 @@ function getDistrictWinners() {
         let winnerName = 'нет голосов';
         if (raionVotes[cat]) {
             for (let teacher in raionVotes[cat]) {
-                const cnt = raionVotes[cat][teacher].length;
+                const cnt = raionVotes[cat][teacher] ? raionVotes[cat][teacher].length : 0;
                 if (cnt > maxCount) {
                     maxCount = cnt;
                     winnerName = teacher;
@@ -441,7 +443,7 @@ function renderSchoolLeaders() {
         let topTeacher = 'нет голосов';
         if (schoolVotes[cat]) {
             for (let teacher in schoolVotes[cat]) {
-                const cnt = schoolVotes[cat][teacher].length;
+                const cnt = schoolVotes[cat][teacher] ? schoolVotes[cat][teacher].length : 0;
                 if (cnt > maxCount) {
                     maxCount = cnt;
                     topTeacher = teacher;
@@ -470,18 +472,18 @@ function renderComments() {
         const commentId = `${currentSchool}_${index}_${c.timestamp}`;
         const likes = commentLikes[commentId] || { likes: [], dislikes: [] };
         
-        const userLike = likes.likes.includes(deviceId) ? 'active-like' : '';
-        const userDislike = likes.dislikes.includes(deviceId) ? 'active-dislike' : '';
+        const userLike = likes.likes && likes.likes.includes(deviceId) ? 'active-like' : '';
+        const userDislike = likes.dislikes && likes.dislikes.includes(deviceId) ? 'active-dislike' : '';
         
         html += `
             <div class="comment-item" data-comment-id="${commentId}">
-                <span class="comment-nick">${c.nick}:</span>
-                <span class="comment-text">${c.text}</span>
+                <span class="comment-nick">${c.nick || 'Аноним'}:</span>
+                <span class="comment-text">${c.text || ''}</span>
                 <div class="comment-likes">
                     <button class="like-btn ${userLike}" data-type="comment" data-action="like">👍</button>
-                    <span class="like-count">${likes.likes.length}</span>
+                    <span class="like-count">${likes.likes ? likes.likes.length : 0}</span>
                     <button class="dislike-btn ${userDislike}" data-type="comment" data-action="dislike">👎</button>
-                    <span class="dislike-count">${likes.dislikes.length}</span>
+                    <span class="dislike-count">${likes.dislikes ? likes.dislikes.length : 0}</span>
                 </div>
             </div>
         `;
@@ -518,38 +520,80 @@ function renderPolls() {
 }
 
 function renderSuggestions() {
+    console.log('📝 Рендерим предложения, всего:', suggestions ? suggestions.length : 0);
+    
     const container = document.getElementById('suggestionsContainer');
     const topContainer = document.getElementById('topSuggestions');
-    if (!container) return;
+    
+    if (!container) {
+        console.error('❌ Нет контейнера suggestionsContainer');
+        return;
+    }
+    
+    // Проверяем, что suggestions существует и является массивом
+    if (!suggestions || !Array.isArray(suggestions)) {
+        console.warn('⚠️ suggestions не массив, создаём пустой массив');
+        suggestions = [];
+    }
+    
+    // Проверяем, что suggestionLikes существует
+    if (!suggestionLikes || typeof suggestionLikes !== 'object') {
+        suggestionLikes = {};
+    }
+    
+    // Добавляем тестовые предложения, если их нет
+    if (suggestions.length === 0) {
+        suggestions.push({
+            id: 'test1_' + Date.now(),
+            nick: 'Тестер',
+            school: '33',
+            text: 'Это тестовое предложение 1',
+            deviceId: 'test',
+            timestamp: Date.now() - 100000
+        });
+        suggestions.push({
+            id: 'test2_' + Date.now(),
+            nick: 'Демон',
+            school: '13',
+            text: 'Это тестовое предложение 2',
+            deviceId: 'test',
+            timestamp: Date.now() - 50000
+        });
+    }
     
     // Сортируем предложения по лайкам для топа
     const suggestionsWithLikes = suggestions.map(s => {
-        const likes = suggestionLikes[s.id] || { likes: [], dislikes: [] };
+        if (!s || typeof s !== 'object') return null;
+        
+        const likes = (suggestionLikes && s.id && suggestionLikes[s.id]) || { likes: [], dislikes: [] };
         return {
             ...s,
-            likeCount: likes.likes.length,
-            dislikeCount: likes.dislikes.length
+            likeCount: likes.likes ? likes.likes.length : 0,
+            dislikeCount: likes.dislikes ? likes.dislikes.length : 0
         };
-    });
+    }).filter(s => s !== null);
     
     // Топ-3 самых залайканных
     const topSuggestions = [...suggestionsWithLikes]
-        .sort((a, b) => b.likeCount - a.likeCount)
+        .sort((a, b) => (b.likeCount || 0) - (a.likeCount || 0))
         .slice(0, 3);
+    
+    console.log('Топ предложений:', topSuggestions);
     
     // Отображаем топ предложений
     if (topContainer) {
         let topHtml = '<div class="top-suggestions-title">🔥 ТОП ПРЕДЛОЖЕНИЙ 🔥</div>';
-        topSuggestions.forEach(s => {
-            topHtml += `
-                <div class="top-suggestion-item">
-                    <div class="top-suggestion-author">${s.nick} (${s.school})</div>
-                    <div class="top-suggestion-text">${s.text}</div>
-                    <div class="top-suggestion-likes">👍 ${s.likeCount}</div>
-                </div>
-            `;
-        });
-        if (topSuggestions.length === 0) {
+        if (topSuggestions.length > 0) {
+            topSuggestions.forEach(s => {
+                topHtml += `
+                    <div class="top-suggestion-item">
+                        <div class="top-suggestion-author">${s.nick || 'Аноним'} (${s.school || '?'})</div>
+                        <div class="top-suggestion-text">${s.text || '...'}</div>
+                        <div class="top-suggestion-likes">👍 ${s.likeCount || 0}</div>
+                    </div>
+                `;
+            });
+        } else {
             topHtml += '<div class="top-suggestion-item">Пока нет предложений</div>';
         }
         topContainer.innerHTML = topHtml;
@@ -557,34 +601,42 @@ function renderSuggestions() {
     
     // Отображаем все предложения
     let html = '';
-    suggestions.slice().reverse().forEach(s => {
-        const likes = suggestionLikes[s.id] || { likes: [], dislikes: [] };
-        const userLike = likes.likes.includes(deviceId) ? 'active-like' : '';
-        const userDislike = likes.dislikes.includes(deviceId) ? 'active-dislike' : '';
-        
-        html += `
-            <div class="suggestion-item" data-suggestion-id="${s.id}">
-                <div class="suggestion-meta">
-                    <span class="suggestion-author">${s.nick}</span>
-                    <span class="suggestion-school-tag">${s.school}</span>
-                    <span>${new Date(s.timestamp).toLocaleString()}</span>
+    if (suggestions.length > 0) {
+        suggestions.slice().reverse().forEach(s => {
+            if (!s || !s.id) return;
+            
+            const likes = (suggestionLikes && suggestionLikes[s.id]) || { likes: [], dislikes: [] };
+            const likeCount = likes.likes ? likes.likes.length : 0;
+            const dislikeCount = likes.dislikes ? likes.dislikes.length : 0;
+            
+            const userLike = likes.likes && likes.likes.includes(deviceId) ? 'active-like' : '';
+            const userDislike = likes.dislikes && likes.dislikes.includes(deviceId) ? 'active-dislike' : '';
+            
+            html += `
+                <div class="suggestion-item" data-suggestion-id="${s.id}">
+                    <div class="suggestion-meta">
+                        <span class="suggestion-author">${s.nick || 'Аноним'}</span>
+                        <span class="suggestion-school-tag">${s.school || '?'}</span>
+                        <span>${s.timestamp ? new Date(s.timestamp).toLocaleString() : 'неизвестно'}</span>
+                    </div>
+                    <div class="suggestion-content">${s.text || '...'}</div>
+                    <div class="suggestion-likes">
+                        <button class="like-btn ${userLike}" data-type="suggestion" data-action="like">👍</button>
+                        <span class="like-count">${likeCount}</span>
+                        <button class="dislike-btn ${userDislike}" data-type="suggestion" data-action="dislike">👎</button>
+                        <span class="dislike-count">${dislikeCount}</span>
+                    </div>
                 </div>
-                <div class="suggestion-content">${s.text}</div>
-                <div class="suggestion-likes">
-                    <button class="like-btn ${userLike}" data-type="suggestion" data-action="like">👍</button>
-                    <span class="like-count">${likes.likes.length}</span>
-                    <button class="dislike-btn ${userDislike}" data-type="suggestion" data-action="dislike">👎</button>
-                    <span class="dislike-count">${likes.dislikes.length}</span>
-                </div>
-            </div>
-        `;
-    });
+            `;
+        });
+    }
     
     if (!html) {
         html = '<div class="suggestion-item">Пока нет предложений. Будь первым!</div>';
     }
     
     container.innerHTML = html;
+    console.log('✅ Предложения отрендерены');
 }
 
 // ===== ОБРАБОТЧИКИ СОБЫТИЙ =====
@@ -700,21 +752,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Отправка предложения
     document.getElementById('sendSuggestion')?.addEventListener('click', async function() {
+        console.log('🔥 Кнопка отправки предложения нажата');
+        
         const nickInput = document.getElementById('suggestionNick');
         const schoolSelect = document.getElementById('suggestionSchool');
         const textInput = document.getElementById('suggestionText');
         
-        const nick = nickInput?.value.trim();
+        const nick = nickInput?.value?.trim();
         const school = schoolSelect?.value;
-        const text = textInput?.value.trim();
+        const text = textInput?.value?.trim();
+        
+        console.log('Данные формы:', { nick, school, text });
         
         if (!nick || !school || !text) {
-            alert('Заполни все поля!');
+            alert('❌ Заполни все поля!');
             return;
         }
         
+        // Создаём новое предложение
         const newSuggestion = {
-            id: Date.now().toString(),
+            id: 'sugg_' + Date.now() + '_' + Math.random().toString(36).substring(2),
             nick: nick,
             school: school,
             text: text,
@@ -722,14 +779,32 @@ document.addEventListener('DOMContentLoaded', function() {
             timestamp: Date.now()
         };
         
+        console.log('Новое предложение:', newSuggestion);
+        
+        // Добавляем в массив
+        if (!suggestions || !Array.isArray(suggestions)) {
+            suggestions = [];
+        }
         suggestions.push(newSuggestion);
         
-        await saveToFirebase();
-        renderSuggestions();
-        
-        if (nickInput) nickInput.value = '';
-        if (schoolSelect) schoolSelect.value = '';
-        if (textInput) textInput.value = '';
+        try {
+            // Сохраняем в Firebase
+            await saveToFirebase();
+            console.log('✅ Предложение сохранено в Firebase');
+            
+            // Очищаем поля
+            if (nickInput) nickInput.value = '';
+            if (schoolSelect) schoolSelect.value = '';
+            if (textInput) textInput.value = '';
+            
+            // Обновляем отображение
+            renderSuggestions();
+            
+            alert('✅ Предложение отправлено!');
+        } catch (error) {
+            console.error('❌ Ошибка сохранения:', error);
+            alert('❌ Ошибка при сохранении. Попробуй ещё раз.');
+        }
     });
 
     // Обработчики лайков (общий для комментариев и предложений)
