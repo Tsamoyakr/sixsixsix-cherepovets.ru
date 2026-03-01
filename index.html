@@ -19,88 +19,103 @@
 
         <!-- Меню навигации -->
         <div class="nav-menu">
-            <div class="nav-item active-nav" data-nav="main">🏠 Главная</div>
+            <div class="nav-item active-nav" data-nav="ratings">🏆 Рейтинги школ</div>
+            <div class="nav-item" data-nav="voting">🗳️ Голосования</div>
             <div class="nav-item" data-nav="suggestions">💡 Предложения</div>
             <div class="nav-item" data-nav="about">🔥 О проекте</div>
         </div>
 
-        <!-- Рейтинг активности школ -->
-        <div class="school-activity">
-            <div class="activity-title">⚡ РЕЙТИНГ АКТИВНОСТИ ШКОЛ ⚡</div>
-            <div class="activity-podium" id="activityPodium"></div>
-        </div>
+        <!-- Раздел РЕЙТИНГИ ШКОЛ (виден по умолчанию) -->
+        <div id="ratingsSection">
+            <!-- Рейтинг активности школ -->
+            <div class="school-activity">
+                <div class="activity-title">⚡ РЕЙТИНГ АКТИВНОСТИ ШКОЛ ⚡</div>
+                <div class="activity-podium" id="activityPodium"></div>
+            </div>
 
-        <!-- Победители района -->
-        <div class="winners-section">
-            <div class="winners-title">👑 ПОБЕДИТЕЛИ РАЙОНА 👑</div>
-            <div class="winners-grid" id="winnersGrid"></div>
-            <div class="timer-block" id="timerDisplay">ОБНОВЛЕНИЕ ЧЕРЕЗ: --д --ч --м</div>
-        </div>
+            <!-- Победители района -->
+            <div class="winners-section">
+                <div class="winners-title">👑 ПОБЕДИТЕЛИ РАЙОНА 👑</div>
+                <div class="winners-grid" id="winnersGrid"></div>
+                <div class="timer-block" id="timerDisplay">ОБНОВЛЕНИЕ ЧЕРЕЗ: --д --ч --м</div>
+            </div>
 
-        <!-- Информация -->
-        <div class="info-box">
-            <div class="info-title">🔞 КАК ЭТО РАБОТАЕТ?</div>
-            <div class="info-text">
-                🔥 Выбирай <span>школу</span> → крути <span>рулетку</span> → жми <span>СОХРАНИТЬ</span>!<br>
-                💋 <span>Один голос</span> с устройства в каждой категории.<br>
-                👅 Все голоса синхронизируются между устройствами!
+            <!-- 4 рекламных места для раздела Рейтинги -->
+            <div class="ad-section">
+                <div class="ad-banner">🔞 РЕКЛАМА 1 (РЕЙТИНГИ)<br><small>тут мог быть твой притон</small></div>
+                <div class="ad-banner">💀 РЕКЛАМА 2 (РЕЙТИНГИ)<br><small>пиши в тг боте</small></div>
+                <div class="ad-banner">🔞 РЕКЛАМА 3 (РЕЙТИНГИ)<br><small>18+ только здесь</small></div>
+                <div class="ad-banner">💀 РЕКЛАМА 4 (РЕЙТИНГИ)<br><small>реклама твоего бизнеса</small></div>
             </div>
         </div>
 
-        <!-- Кнопки выбора школы -->
-        <div class="selection-panel">
-            <div class="school-btn active" data-school="33">33 ШКОЛА</div>
-            <div class="school-btn" data-school="13">13 ШКОЛА</div>
-            <div class="school-btn" data-school="29">29 ШКОЛА</div>
-            <div class="school-btn raion" data-school="raion">РАЙОН (ВСЕ)</div>
-        </div>
-
-        <!-- Фильтр для района -->
-        <div class="school-filter" id="schoolFilter" style="display: none;">
-            <div class="filter-btn active-filter" data-filter-school="all">Все школы</div>
-            <div class="filter-btn" data-filter-school="33">33 школа</div>
-            <div class="filter-btn" data-filter-school="13">13 школа</div>
-            <div class="filter-btn" data-filter-school="29">29 школа</div>
-        </div>
-
-        <!-- Рулетка -->
-        <div class="roulette-container">
-            <div class="category-tabs" id="categoryTabs">
-                <div class="cat-btn active-cat" data-cat="sexy">💋 Самая секси</div>
-                <div class="cat-btn" data-cat="good">😇 Самая добрая</div>
-                <div class="cat-btn" data-cat="mraz">👿 Самая мразота</div>
-                <div class="cat-btn" data-cat="fun">🔥 Самая угарная</div>
-                <div class="cat-btn" data-cat="chill">😎 Самый чиловый мужик</div>
-            </div>
-
-            <div class="selection-area">
-                <div class="teacher-wheel" id="teacherWheel"></div>
-                <button class="save-vote-btn" id="saveVoteBtn" disabled>💾 СОХРАНИТЬ ВЫБОР</button>
-            </div>
-        </div>
-
-        <!-- Лидеры школы -->
-        <div class="school-leaders" id="schoolLeadersBlock">
-            <div class="leaders-title" id="leadersTitle">ЛИДЕРЫ ШКОЛЫ 33</div>
-            <div class="leaders-grid" id="leadersGrid"></div>
-        </div>
-
-        <!-- Комментарии и реклама -->
-        <div class="bottom-panel">
-            <div class="comments-block">
-                <div class="comments-title">💬 ТРЕП (комментарии)</div>
-                <div class="comment-list" id="commentList"></div>
-                <div class="comment-input-area">
-                    <input type="text" class="nick-input" id="nickInput" placeholder="твой ник..." maxlength="20">
-                    <input type="text" class="comment-input" id="commentInput" placeholder="комментарий..." maxlength="100">
-                    <button class="comment-send" id="sendComment">🔥 ОТПРАВИТЬ</button>
+        <!-- Раздел ГОЛОСОВАНИЯ (скрыт по умолчанию) -->
+        <div id="votingSection" style="display: none;">
+            <!-- Информация -->
+            <div class="info-box">
+                <div class="info-title">🔞 КАК ЭТО РАБОТАЕТ?</div>
+                <div class="info-text">
+                    🔥 Выбирай <span>школу</span> → крути <span>рулетку</span> → жми <span>СОХРАНИТЬ</span>!<br>
+                    💋 <span>Один голос</span> с устройства в каждой категории.<br>
+                    👅 Все голоса синхронизируются между устройствами!
                 </div>
             </div>
-            <div class="ad-block">
-                <div class="ad-banner">🔞 ПОШЛАЯ РЕКЛАМА 1<br><small>тут мог быть твой притон</small></div>
-                <div class="ad-banner">💀 АДМИНСКАЯ РЕКЛАМА 1<br><small>пиши в тг боте</small></div>
-                <div class="ad-banner">🔞 ПОШЛАЯ РЕКЛАМА 2<br><small>18+ только здесь</small></div>
-                <div class="ad-banner">💀 АДМИНСКАЯ РЕКЛАМА 2<br><small>реклама твоего бизнеса</small></div>
+
+            <!-- Кнопки выбора школы -->
+            <div class="selection-panel">
+                <div class="school-btn active" data-school="33">33 ШКОЛА</div>
+                <div class="school-btn" data-school="13">13 ШКОЛА</div>
+                <div class="school-btn" data-school="29">29 ШКОЛА</div>
+                <div class="school-btn raion" data-school="raion">РАЙОН (ВСЕ)</div>
+            </div>
+
+            <!-- Фильтр для района -->
+            <div class="school-filter" id="schoolFilter" style="display: none;">
+                <div class="filter-btn active-filter" data-filter-school="all">Все школы</div>
+                <div class="filter-btn" data-filter-school="33">33 школа</div>
+                <div class="filter-btn" data-filter-school="13">13 школа</div>
+                <div class="filter-btn" data-filter-school="29">29 школа</div>
+            </div>
+
+            <!-- Рулетка -->
+            <div class="roulette-container">
+                <div class="category-tabs" id="categoryTabs">
+                    <div class="cat-btn active-cat" data-cat="sexy">💋 Самая секси</div>
+                    <div class="cat-btn" data-cat="good">😇 Самая добрая</div>
+                    <div class="cat-btn" data-cat="mraz">👿 Самая мразота</div>
+                    <div class="cat-btn" data-cat="fun">🔥 Самая угарная</div>
+                    <div class="cat-btn" data-cat="chill">😎 Самый чиловый мужик</div>
+                </div>
+
+                <div class="selection-area">
+                    <div class="teacher-wheel" id="teacherWheel"></div>
+                    <button class="save-vote-btn" id="saveVoteBtn" disabled>💾 СОХРАНИТЬ ВЫБОР</button>
+                </div>
+            </div>
+
+            <!-- Лидеры школы -->
+            <div class="school-leaders" id="schoolLeadersBlock">
+                <div class="leaders-title" id="leadersTitle">ЛИДЕРЫ ШКОЛЫ 33</div>
+                <div class="leaders-grid" id="leadersGrid"></div>
+            </div>
+
+            <!-- Комментарии и 4 рекламных места -->
+            <div class="bottom-panel">
+                <div class="comments-block">
+                    <div class="comments-title">💬 ТРЕП (комментарии)</div>
+                    <div class="comment-list" id="commentList"></div>
+                    <div class="comment-input-area">
+                        <input type="text" class="nick-input" id="nickInput" placeholder="твой ник..." maxlength="20">
+                        <input type="text" class="comment-input" id="commentInput" placeholder="комментарий..." maxlength="100">
+                        <button class="comment-send" id="sendComment">🔥 ОТПРАВИТЬ</button>
+                    </div>
+                </div>
+                <div class="ad-block">
+                    <div class="ad-banner">🔞 РЕКЛАМА 1 (ГОЛОСОВАНИЯ)<br><small>тут мог быть твой притон</small></div>
+                    <div class="ad-banner">💀 РЕКЛАМА 2 (ГОЛОСОВАНИЯ)<br><small>пиши в тг боте</small></div>
+                    <div class="ad-banner">🔞 РЕКЛАМА 3 (ГОЛОСОВАНИЯ)<br><small>18+ только здесь</small></div>
+                    <div class="ad-banner">💀 РЕКЛАМА 4 (ГОЛОСОВАНИЯ)<br><small>реклама твоего бизнеса</small></div>
+                </div>
             </div>
         </div>
 
@@ -115,15 +130,6 @@
                 <a href="https://t.me/+0asI7j0d65Q2NDBi" target="_blank" class="tg-channel-button">🔥 ПОДПИСАТЬСЯ 🔥</a>
             </div>
             
-            <!-- Голосования -->
-            <div class="polls-container">
-                <div class="poll-title">🔥 ГОРЯЧИЕ ГОЛОСОВАНИЯ</div>
-                <div class="polls-grid" id="pollsGrid"></div>
-            </div>
-
-            <!-- Топ предложений -->
-            <div class="top-suggestions-container" id="topSuggestions"></div>
-
             <!-- Форма предложений -->
             <div class="suggestion-form">
                 <div class="form-title">📝 ОСТАВИТЬ ПРЕДЛОЖЕНИЕ</div>
@@ -139,7 +145,28 @@
                 <button class="suggestion-send" id="sendSuggestion">🔥 ОТПРАВИТЬ ПРЕДЛОЖЕНИЕ</button>
             </div>
 
-            
+            <!-- 4 рекламных места для раздела Предложения -->
+            <div class="ad-section">
+                <div class="ad-banner">🔞 РЕКЛАМА 1 (ПРЕДЛОЖЕНИЯ)<br><small>тут мог быть твой притон</small></div>
+                <div class="ad-banner">💀 РЕКЛАМА 2 (ПРЕДЛОЖЕНИЯ)<br><small>пиши в тг боте</small></div>
+                <div class="ad-banner">🔞 РЕКЛАМА 3 (ПРЕДЛОЖЕНИЯ)<br><small>18+ только здесь</small></div>
+                <div class="ad-banner">💀 РЕКЛАМА 4 (ПРЕДЛОЖЕНИЯ)<br><small>реклама твоего бизнеса</small></div>
+            </div>
+        </div>
+
+        <!-- Секция О ПРОЕКТЕ -->
+        <div class="about-section" id="aboutSection" style="display: none;">
+            <div class="about-content">
+                <h2>О ПРОЕКТЕ / МАНИФЕСТ</h2>
+                <p>Школа — это ад.<br>Душные уроки, крики по утрам и куча домашнего ада. Но есть в этом филиале преисподней те, кто делает это место чуть менее невыносимым. Или наоборот — превращают его в настоящий кошмар.</p>
+                <p>SixSixSix Zaebis — это народный рейтинг учителей, свободный от лицемерия и школьной цензуры.</p>
+                <p>Мы не собираем грамоты и не целуем руки. Мы собираем голоса. Здесь ученики решают, кто реально «Zaebis» (то есть заслуживает уважения и лайка), а кто тянет школу на дно.</p>
+                <h3>Как это работает?</h3>
+                <p>Находишь свою «мучительницу» или «любимицу» в списке.<br>Ставишь оценку. Чеснок. Без прикрас.<br>Комментируешь так, как есть. Приколы, истории с уроков, крики душнил — всё в топку.</p>
+                <p>Это не просто голосование. Это акт неповиновения. Это наш способ сказать спасибо тем, кто реально учит, и высветить тех, кто давно потерял связь с реальностью.</p>
+                <p>Добро пожаловать в ад, детка. Здесь жарко, весело и только честные оценки.</p>
+                <div class="about-ad">🔞 ТУТ МОЖЕТ БЫТЬ ТВОЯ РЕКЛАМА 🔥<br><small>пиши в tg боте</small></div>
+            </div>
         </div>
 
         <div class="footer-note">💋 666 — голосуй порочно, но честно 🔥</div>
@@ -149,4 +176,3 @@
     <script type="module" src="script.js"></script>
 </body>
 </html>
-
