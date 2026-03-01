@@ -543,34 +543,22 @@ function renderSuggestions() {
     
     // Добавляем тестовые предложения, если их нет
     if (suggestions.length === 0) {
-        const testSuggestions = [
-            {
-                id: 'test1_' + Date.now(),
-                nick: 'Тестер',
-                school: '33',
-                text: 'Предлагаю устроить батл между 33 и 13 школой!',
-                deviceId: 'test',
-                timestamp: Date.now() - 100000
-            },
-            {
-                id: 'test2_' + Date.now(),
-                nick: 'Демон',
-                school: '13',
-                text: 'Нужно добавить номинацию "Самый стрёмный учитель"',
-                deviceId: 'test',
-                timestamp: Date.now() - 50000
-            },
-            {
-                id: 'test3_' + Date.now(),
-                nick: 'Админ',
-                school: '29',
-                text: 'Сделайте голосование за лучший класс!',
-                deviceId: 'test',
-                timestamp: Date.now() - 25000
-            }
-        ];
-        suggestions.push(...testSuggestions);
-        console.log('✅ Добавлены тестовые предложения');
+        suggestions.push({
+            id: 'test1_' + Date.now(),
+            nick: 'Тестер',
+            school: '33',
+            text: 'Это тестовое предложение 1',
+            deviceId: 'test',
+            timestamp: Date.now() - 100000
+        });
+        suggestions.push({
+            id: 'test2_' + Date.now(),
+            nick: 'Демон',
+            school: '13',
+            text: 'Это тестовое предложение 2',
+            deviceId: 'test',
+            timestamp: Date.now() - 50000
+        });
     }
     
     // Сортируем предложения по лайкам для топа
@@ -1008,3 +996,4 @@ document.addEventListener('DOMContentLoaded', function() {
     updateTimer();
     setInterval(updateTimer, 60000);
 });
+
