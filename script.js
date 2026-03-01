@@ -1,4 +1,4 @@
-// ========== НАСТРОЙКИ FIREBASE ==========// ========== НАСТРОЙКИ FIREBASE ==========
+// ========== НАСТРОЙКИ FIREBASE ==========
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import { getDatabase, ref, set, get, onValue } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
 
@@ -92,7 +92,7 @@ let votes = { "33": {}, "13": {}, "29": {}, "raion": {} };
 let comments = { "33": [], "13": [], "29": [], "raion": [] };
 let commentLikes = {};
 let suggestions = [];
-let suggestionLikes = {}; // Для лайков предложений
+let suggestionLikes = {};
 let polls = [
     {
         id: 1,
@@ -108,7 +108,7 @@ let polls = [
     },
     {
         id: 3,
-        question: "Голосования среди учеников?",
+        question: "Делать батлы среди учеников?",
         options: ["Да", "Нет"],
         votes: { "Да": [], "Нет": [] }
     }
@@ -594,29 +594,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Создаём секцию "О проекте"
     createAboutSection();
     
-    // Добавляем кнопку TG канала
-    const header = document.querySelector('.header');
-    if (header) {
-        const tgChannelBtn = document.createElement('a');
-        tgChannelBtn.href = 'https://t.me/+0asI7j0d65Q2NDBi';
-        tgChannelBtn.target = '_blank';
-        tgChannelBtn.className = 'tg-button tg-channel';
-        tgChannelBtn.style.marginLeft = '10px';
-        tgChannelBtn.innerHTML = '📢 TG КАНАЛ';
-        header.appendChild(tgChannelBtn);
-    }
-    
-    // Обновляем рекламный блок - делаем 4 места
-    const adBlock = document.querySelector('.ad-block');
-    if (adBlock) {
-        adBlock.innerHTML = `
-            <div class="ad-banner">🔞 ПОШЛАЯ РЕКЛАМА 1<br><small>тут мог быть твой притон</small></div>
-            <div class="ad-banner">💀 АДМИНСКАЯ РЕКЛАМА 1<br><small>пиши в тг боте</small></div>
-            <div class="ad-banner">🔞 ПОШЛАЯ РЕКЛАМА 2<br><small>18+ только здесь</small></div>
-            <div class="ad-banner">💀 АДМИНСКАЯ РЕКЛАМА 2<br><small>реклама твоего бизнеса</small></div>
-        `;
-    }
-    
     // Навигация по меню
     document.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', function() {
@@ -761,19 +738,17 @@ document.addEventListener('DOMContentLoaded', function() {
             const btn = e.target;
             const type = btn.dataset.type; // 'comment' или 'suggestion'
             const action = btn.dataset.action;
-            const parent = btn.closest(type === 'comment' ? '.comment-item' : '.suggestion-item');
-            
-            if (!parent) return;
-            
-            const id = parent.dataset.commentId || parent.dataset.suggestionId;
-            if (!id) return;
             
             if (type === 'comment') {
-                if (!commentLikes[id]) {
-                    commentLikes[id] = { likes: [], dislikes: [] };
+                const commentItem = btn.closest('.comment-item');
+                const commentId = commentItem?.dataset.commentId;
+                if (!commentId) return;
+                
+                if (!commentLikes[commentId]) {
+                    commentLikes[commentId] = { likes: [], dislikes: [] };
                 }
                 
-                const likes = commentLikes[id];
+                const likes = commentLikes[commentId];
                 
                 if (action === 'like') {
                     if (likes.likes.includes(deviceId)) {
@@ -794,11 +769,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 await saveToFirebase();
                 renderComments();
             } else if (type === 'suggestion') {
-                if (!suggestionLikes[id]) {
-                    suggestionLikes[id] = { likes: [], dislikes: [] };
+                const suggestionItem = btn.closest('.suggestion-item');
+                const suggestionId = suggestionItem?.dataset.suggestionId;
+                if (!suggestionId) return;
+                
+                if (!suggestionLikes[suggestionId]) {
+                    suggestionLikes[suggestionId] = { likes: [], dislikes: [] };
                 }
                 
-                const likes = suggestionLikes[id];
+                const likes = suggestionLikes[suggestionId];
                 
                 if (action === 'like') {
                     if (likes.likes.includes(deviceId)) {
@@ -825,7 +804,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.target.classList.contains('poll-btn')) {
             const btn = e.target;
             const pollItem = btn.closest('.poll-item');
-            const pollId = pollItem.dataset.pollId;
+            const pollId = pollItem?.dataset.pollId;
             const option = btn.dataset.option;
             const poll = polls.find(p => p.id == pollId);
             
