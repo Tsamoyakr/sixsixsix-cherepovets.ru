@@ -18,7 +18,8 @@ const db = getDatabase(app);
 
 // ===== НАСТРОЙКИ TELEGRAM =====
 const TELEGRAM_TOKEN = '7710917089:AAFmTgJjmWxeQ2eBLiEL8KCifZ994jOUNGA';
-const TELEGRAM_CHAT_ID = '1269630089';
+const TELEGRAM_CHAT_ID = '1269630089';        // Твой личный ID
+const TELEGRAM_GROUP_ID = '-5209718076';      // ID группы (для всех админов)
 // ===============================
 
 console.log('🔥 Firebase версия загружена');
@@ -106,7 +107,8 @@ async function sendToTelegram(suggestion) {
                    `🕐 *Время:* ${new Date().toLocaleString()}`;
     
     try {
-        const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+        // Отправляем тебе в личку
+        await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -116,14 +118,19 @@ async function sendToTelegram(suggestion) {
             })
         });
         
-        const data = await response.json();
-        if (data.ok) {
-            console.log('✅ Отправлено в Telegram');
-            return true;
-        } else {
-            console.error('❌ Ошибка Telegram:', data);
-            return false;
-        }
+        // Отправляем в группу (для всех админов)
+        await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: TELEGRAM_GROUP_ID,
+                text: message,
+                parse_mode: 'Markdown'
+            })
+        });
+        
+        console.log('✅ Отправлено в Telegram (личка и группа)');
+        return true;
     } catch (error) {
         console.error('❌ Ошибка отправки:', error);
         return false;
