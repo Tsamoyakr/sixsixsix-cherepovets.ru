@@ -1,6 +1,6 @@
 // ========== НАСТРОЙКИ FIREBASE ==========
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import { getDatabase, ref, set, get, onValue } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
+import { getDatabase, ref, set, get, onValue, update } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCRgQ7y14HmmNEXXLqNMqjOLMUJzWCoHwc",
@@ -18,54 +18,112 @@ const db = getDatabase(app);
 
 console.log('🔥 Firebase версия загружена');
 
-// ===== БАЗА ДАННЫХ УЧИТЕЛЕЙ =====
-const teachersDB = {
-    "29": [
-        "Горчакова Анжелика Николаевна", "Шукова Ольга Анатольевна", "Якунов Даниил Александрович",
-        "Алексеевцева Валерия Дмитриевна", "Белоброва Любовь Владимировна", "Воробьева Анастасия Игоревна",
-        "Елина Ирина Алексеевна", "Ефремова Галина Валерьевна", "Загоскина Евгения Петровна",
-        "Заморкина Светлана Анатольевна", "Занина Ирина Юрьевна", "Зубова Лариса Венеаминовна",
-        "Королькова Светлана Геннадьевна", "Кузнецов Николай Константинович", "Мазилова Виктория Вячеславовна",
-        "Мегельбей Полина Сергеевна", "Зенкова Татьяна Александровна", "Ольнова Ирина Валентиновна",
-        "Петрова Анастасия Викторовна", "Проворова Карина Александровна", "Ратькова Людмила Александровна",
-        "Столярова Ольга Александровна", "Таничева Мария Владимировна", "Туманова Ольга Николаевна",
-        "Хамова Наталья Михайловна"
-    ],
-    "33": [
-        "Расторопова Алена Игоревна", "Кудряшова Вера Григорьевна", "Ярошенко Наталья Николаевна",
-        "Шутова Любовь Сергеевна", "Шкокова Елена Евгеньевна", "Хухарева Елена Юрьевна",
-        "Харламова Татьяна Александровна", "Фомина Ирина Ивановна", "Титаренко Оксана Николаевна",
-        "Таланова Наталья Александровна", "Скорюкова Екатерина Ивановна", "Ситникова Ольга Викторовна",
-        "Сёмина Жанна Николаевна", "Сахарова Валентина Васильевна", "Руденко Любовь Николаевна",
-        "Рескова Светлана Юрьевна", "Павлова Ирина Анатольевна", "Оленева Светлана Александровна",
-        "Никандрова Наталья Александровна", "Нивина Любовь Николаевна", "Мартынова Наталия Николаевна",
-        "Маракова Надежда Алфеевна", "Магомедова Ирина Ивановна", "Лучкинская Ирина Валентиновна",
-        "Кустова Аксана Владимировна", "Куликова Елена Леонидовна", "Кузьмина Анна Владимировна",
-        "Клочков Алексей Александрович", "Иевлева Татьяна Владимировна", "Жилина Мария Вадимовна",
-        "Нестерова Анжелика Михайловна", "Дьякова Елена Павловна", "Плужникова Анна Дмитриевна",
-        "Дьякова Юлия Сергеевна", "Иванова Елена Валентиновна", "Викторова Татьяна Анатольевна",
-        "Андреева Вера Сергеевна", "Акимова Светлана Петровна"
-    ],
-    "13": [
-        "Агеева Марина Анатольевна", "Антончик Светлана Вячеславовна", "Беляева Анна Павловна",
-        "Беляева Ольга Сергеевна", "Билькова Оксана Алексеевна", "Борисова Юлия Викторовна",
-        "Булындина Светлана Дмитриевна", "Быстрова Екатерина Сергеевна", "Викторова Ольга Викторовна",
-        "Гайдов Владимир Валентинович", "Дурягина Людмила Сергеевна", "Зайцева Виктория Николаевна",
-        "Игнатьева Светлана Анатольевна", "Казакова Евгения Николаевна", "Клягина Светлана Михайловна",
-        "Короп Лариса Владимировна", "Коряковская Светлана Анатольевна", "Кудрявцева Анастасия Николаевна",
-        "Кузнецова Валентина Александровна", "Красильникова Александра Васильевна", "Лыгина Наталия Николаевна",
-        "Мальцева Евгения Станиславовна", "Мальцева Мария Олеговна", "Мартынов Павел Сергеевич",
-        "Мастакова Светлана Евгеньевна", "Меньшикова Татьяна Константиновна", "Митюкова Елена Анатольевна",
-        "Морозова Елена Николаевна", "Морозова Анастасия Владимировна", "Немирович Мария Вячеславовна",
-        "Никитенко Яна Валерьевна", "Николина Марина Николаевна", "Неклюдова Алёна Сергеевна",
-        "Петухова Татьяна Валерьевна", "Петуховская Наталья Геннадьевна", "Пенькова Анна Александровна",
-        "Распутина Ирина Леонидовна", "Расторопова Алена Игоревна", "Сверчкова Наталья Владимировна",
-        "Сергеева Елена Николаевна", "Серобабена Галина Васильевна", "Смирнова Елена Вячеславовна",
-        "Соловьева Нина Валерьевна", "Сорокина Екатерина Алексеевна", "Степанова Лариса Владимировна",
-        "Сиволап Даниил Андреевич", "Таничева Виктория Дмитриевна", "Тикунова Жанна Валерьевна",
-        "Торочкова Александра Андреевна", "Тырнова Ольга Владимировна", "Трубаева Людмила Васильевна"
-    ]
+// ===== КЭШ И ОПТИМИЗАЦИЯ =====
+const cache = {
+    teachers: null,
+    scores: null,
+    lastScoreUpdate: 0,
+    domElements: {}
 };
+
+// Функция для замера производительности
+const perf = {
+    marks: {},
+    start(name) { this.marks[name] = performance.now(); },
+    end(name) { 
+        const time = performance.now() - this.marks[name];
+        if (time > 50) console.warn(`⚠️ ${name}: ${time.toFixed(2)}мс`);
+        return time;
+    }
+};
+
+// Debounce функция для частых обновлений
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Пакетное сохранение в Firebase
+let pendingChanges = {};
+let saveTimer;
+
+function queueSave(path, data) {
+    pendingChanges[path] = data;
+    
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(async () => {
+        if (Object.keys(pendingChanges).length === 0) return;
+        
+        try {
+            await update(ref(db), pendingChanges);
+            console.log('✅ Пакетное сохранение:', Object.keys(pendingChanges));
+            pendingChanges = {};
+        } catch (error) {
+            console.error('❌ Ошибка пакетного сохранения:', error);
+        }
+    }, 2000);
+}
+
+// ===== БАЗА ДАННЫХ УЧИТЕЛЕЙ (кешируем) =====
+function getTeachersDB() {
+    if (!cache.teachers) {
+        cache.teachers = {
+            "29": [
+                "Горчакова Анжелика Николаевна", "Шукова Ольга Анатольевна", "Якунов Даниил Александрович",
+                "Алексеевцева Валерия Дмитриевна", "Белоброва Любовь Владимировна", "Воробьева Анастасия Игоревна",
+                "Елина Ирина Алексеевна", "Ефремова Галина Валерьевна", "Загоскина Евгения Петровна",
+                "Заморкина Светлана Анатольевна", "Занина Ирина Юрьевна", "Зубова Лариса Венеаминовна",
+                "Королькова Светлана Геннадьевна", "Кузнецов Николай Константинович", "Мазилова Виктория Вячеславовна",
+                "Мегельбей Полина Сергеевна", "Зенкова Татьяна Александровна", "Ольнова Ирина Валентиновна",
+                "Петрова Анастасия Викторовна", "Проворова Карина Александровна", "Ратькова Людмила Александровна",
+                "Столярова Ольга Александровна", "Таничева Мария Владимировна", "Туманова Ольга Николаевна",
+                "Хамова Наталья Михайловна"
+            ],
+            "33": [
+                "Расторопова Алена Игоревна", "Кудряшова Вера Григорьевна", "Ярошенко Наталья Николаевна",
+                "Шутова Любовь Сергеевна", "Шкокова Елена Евгеньевна", "Хухарева Елена Юрьевна",
+                "Харламова Татьяна Александровна", "Фомина Ирина Ивановна", "Титаренко Оксана Николаевна",
+                "Таланова Наталья Александровна", "Скорюкова Екатерина Ивановна", "Ситникова Ольга Викторовна",
+                "Сёмина Жанна Николаевна", "Сахарова Валентина Васильевна", "Руденко Любовь Николаевна",
+                "Рескова Светлана Юрьевна", "Павлова Ирина Анатольевна", "Оленева Светлана Александровна",
+                "Никандрова Наталья Александровна", "Нивина Любовь Николаевна", "Мартынова Наталия Николаевна",
+                "Маракова Надежда Алфеевна", "Магомедова Ирина Ивановна", "Лучкинская Ирина Валентиновна",
+                "Кустова Аксана Владимировна", "Куликова Елена Леонидовна", "Кузьмина Анна Владимировна",
+                "Клочков Алексей Александрович", "Иевлева Татьяна Владимировна", "Жилина Мария Вадимовна",
+                "Нестерова Анжелика Михайловна", "Дьякова Елена Павловна", "Плужникова Анна Дмитриевна",
+                "Дьякова Юлия Сергеевна", "Иванова Елена Валентиновна", "Викторова Татьяна Анатольевна",
+                "Андреева Вера Сергеевна", "Акимова Светлана Петровна"
+            ],
+            "13": [
+                "Агеева Марина Анатольевна", "Антончик Светлана Вячеславовна", "Беляева Анна Павловна",
+                "Беляева Ольга Сергеевна", "Билькова Оксана Алексеевна", "Борисова Юлия Викторовна",
+                "Булындина Светлана Дмитриевна", "Быстрова Екатерина Сергеевна", "Викторова Ольга Викторовна",
+                "Гайдов Владимир Валентинович", "Дурягина Людмила Сергеевна", "Зайцева Виктория Николаевна",
+                "Игнатьева Светлана Анатольевна", "Казакова Евгения Николаевна", "Клягина Светлана Михайловна",
+                "Короп Лариса Владимировна", "Коряковская Светлана Анатольевна", "Кудрявцева Анастасия Николаевна",
+                "Кузнецова Валентина Александровна", "Красильникова Александра Васильевна", "Лыгина Наталия Николаевна",
+                "Мальцева Евгения Станиславовна", "Мальцева Мария Олеговна", "Мартынов Павел Сергеевич",
+                "Мастакова Светлана Евгеньевна", "Меньшикова Татьяна Константиновна", "Митюкова Елена Анатольевна",
+                "Морозова Елена Николаевна", "Морозова Анастасия Владимировна", "Немирович Мария Вячеславовна",
+                "Никитенко Яна Валерьевна", "Николина Марина Николаевна", "Неклюдова Алёна Сергеевна",
+                "Петухова Татьяна Валерьевна", "Петуховская Наталья Геннадьевна", "Пенькова Анна Александровна",
+                "Распутина Ирина Леонидовна", "Расторопова Алена Игоревна", "Сверчкова Наталья Владимировна",
+                "Сергеева Елена Николаевна", "Серобабена Галина Васильевна", "Смирнова Елена Вячеславовна",
+                "Соловьева Нина Валерьевна", "Сорокина Екатерина Алексеевна", "Степанова Лариса Владимировна",
+                "Сиволап Даниил Андреевич", "Таничева Виктория Дмитриевна", "Тикунова Жанна Валерьевна",
+                "Торочкова Александра Андреевна", "Тырнова Ольга Владимировна", "Трубаева Людмила Васильевна"
+            ]
+        };
+    }
+    return cache.teachers;
+}
 
 // Список учителей мужского пола
 const maleTeachers = [
@@ -141,50 +199,48 @@ function createAboutSection() {
     container.appendChild(aboutSection);
 }
 
-// ===== ФУНКЦИИ FIREBASE =====
+// ===== ФУНКЦИИ FIREBASE (ОПТИМИЗИРОВАННЫЕ) =====
 async function loadFromFirebase() {
+    perf.start('loadFromFirebase');
+    
     try {
-        const votesRef = ref(db, 'votes');
-        const votesSnap = await get(votesRef);
-        if (votesSnap.exists()) {
-            votes = votesSnap.val();
-        }
+        // Загружаем всё одним запросом
+        const rootRef = ref(db, '/');
+        const snapshot = await get(rootRef);
+        
+        if (snapshot.exists()) {
+            const data = snapshot.val();
+            
+            // Обновляем только изменившиеся данные
+            if (data.votes && JSON.stringify(votes) !== JSON.stringify(data.votes)) {
+                votes = data.votes;
+            }
+            if (data.comments && JSON.stringify(comments) !== JSON.stringify(data.comments)) {
+                comments = data.comments;
+            }
+            if (data.commentLikes && JSON.stringify(commentLikes) !== JSON.stringify(data.commentLikes)) {
+                commentLikes = data.commentLikes;
+            }
+            if (data.suggestions && JSON.stringify(suggestions) !== JSON.stringify(data.suggestions)) {
+                suggestions = data.suggestions;
+            }
+            if (data.suggestionLikes && JSON.stringify(suggestionLikes) !== JSON.stringify(data.suggestionLikes)) {
+                suggestionLikes = data.suggestionLikes;
+            }
+            if (data.polls && JSON.stringify(polls) !== JSON.stringify(data.polls)) {
+                polls = data.polls;
+            }
 
-        const commentsRef = ref(db, 'comments');
-        const commentsSnap = await get(commentsRef);
-        if (commentsSnap.exists()) {
-            comments = commentsSnap.val();
-        }
-
-        const commentLikesRef = ref(db, 'commentLikes');
-        const commentLikesSnap = await get(commentLikesRef);
-        if (commentLikesSnap.exists()) {
-            commentLikes = commentLikesSnap.val();
-        }
-
-        const suggestionsRef = ref(db, 'suggestions');
-        const suggestionsSnap = await get(suggestionsRef);
-        if (suggestionsSnap.exists()) {
-            suggestions = suggestionsSnap.val();
-        }
-
-        const suggestionLikesRef = ref(db, 'suggestionLikes');
-        const suggestionLikesSnap = await get(suggestionLikesRef);
-        if (suggestionLikesSnap.exists()) {
-            suggestionLikes = suggestionLikesSnap.val();
-        }
-
-        const pollsRef = ref(db, 'polls');
-        const pollsSnap = await get(pollsRef);
-        if (pollsSnap.exists()) {
-            polls = pollsSnap.val();
-        }
-
-        console.log('✅ Все данные загружены');
-        updateAllDisplays();
-        if (currentNav === 'suggestions') {
-            renderSuggestions();
-            renderPolls();
+            console.log(`✅ Данные загружены за ${perf.end('loadFromFirebase').toFixed(2)}мс`);
+            
+            // Асинхронное обновление UI
+            setTimeout(() => {
+                updateAllDisplays();
+                if (currentNav === 'suggestions') {
+                    renderSuggestions();
+                    renderPolls();
+                }
+            }, 0);
         }
     } catch (error) {
         console.error('❌ Ошибка загрузки из Firebase:', error);
@@ -192,66 +248,59 @@ async function loadFromFirebase() {
 }
 
 async function saveToFirebase() {
+    perf.start('saveToFirebase');
+    
     try {
-        await set(ref(db, 'votes'), votes);
-        await set(ref(db, 'comments'), comments);
-        await set(ref(db, 'commentLikes'), commentLikes);
-        await set(ref(db, 'suggestions'), suggestions);
-        await set(ref(db, 'suggestionLikes'), suggestionLikes);
-        await set(ref(db, 'polls'), polls);
-        console.log('✅ Все данные сохранены в Firebase');
+        // Используем пакетное обновление
+        const updates = {
+            '/votes': votes,
+            '/comments': comments,
+            '/commentLikes': commentLikes,
+            '/suggestions': suggestions,
+            '/suggestionLikes': suggestionLikes,
+            '/polls': polls
+        };
+        
+        await update(ref(db), updates);
+        console.log(`✅ Данные сохранены за ${perf.end('saveToFirebase').toFixed(2)}мс`);
     } catch (error) {
         console.error('❌ Ошибка сохранения в Firebase:', error);
     }
 }
 
 function subscribeToUpdates() {
-    const votesRef = ref(db, 'votes');
-    onValue(votesRef, (snapshot) => {
-        if (snapshot.exists()) {
-            votes = snapshot.val();
-            updateAllDisplays();
-        }
-    });
-
-    const commentsRef = ref(db, 'comments');
-    onValue(commentsRef, (snapshot) => {
-        if (snapshot.exists()) {
-            comments = snapshot.val();
-            renderComments();
-        }
-    });
-
-    const commentLikesRef = ref(db, 'commentLikes');
-    onValue(commentLikesRef, (snapshot) => {
-        if (snapshot.exists()) {
-            commentLikes = snapshot.val();
-            renderComments();
-        }
-    });
-
-    const suggestionsRef = ref(db, 'suggestions');
-    onValue(suggestionsRef, (snapshot) => {
-        if (snapshot.exists()) {
-            suggestions = snapshot.val();
-            if (currentNav === 'suggestions') {
-                renderSuggestions();
-            }
-        }
-    });
-
-    const suggestionLikesRef = ref(db, 'suggestionLikes');
-    onValue(suggestionLikesRef, (snapshot) => {
-        if (snapshot.exists()) {
-            suggestionLikes = snapshot.val();
-            if (currentNav === 'suggestions') {
-                renderSuggestions();
-            }
+    // Одна подписка на все изменения
+    const rootRef = ref(db, '/');
+    onValue(rootRef, (snapshot) => {
+        if (!snapshot.exists()) return;
+        
+        const data = snapshot.val();
+        let needsUpdate = false;
+        
+        if (data.votes) { votes = data.votes; needsUpdate = true; }
+        if (data.comments) { comments = data.comments; needsUpdate = true; }
+        if (data.commentLikes) { commentLikes = data.commentLikes; needsUpdate = true; }
+        if (data.suggestions) { suggestions = data.suggestions; needsUpdate = true; }
+        if (data.suggestionLikes) { suggestionLikes = data.suggestionLikes; needsUpdate = true; }
+        if (data.polls) { polls = data.polls; needsUpdate = true; }
+        
+        if (needsUpdate) {
+            // Используем debounce для частых обновлений
+            debouncedUpdate();
         }
     });
 }
 
-// ===== ФУНКЦИИ ИНТЕРФЕЙСА =====
+// Debounced обновление интерфейса
+const debouncedUpdate = debounce(() => {
+    updateAllDisplays();
+    if (currentNav === 'suggestions') {
+        renderSuggestions();
+        renderPolls();
+    }
+}, 100);
+
+// ===== ФУНКЦИИ ИНТЕРФЕЙСА (ОПТИМИЗИРОВАННЫЕ) =====
 function updateAllDisplays() {
     updateActivityPodium();
     renderWinnersDistrict();
@@ -260,65 +309,99 @@ function updateAllDisplays() {
 }
 
 function getFilteredTeachers() {
-    let teachers = [];
+    const teachers = getTeachersDB();
+    let result = [];
+    
     if (currentSchool === 'raion') {
         if (filterSchool === 'all') {
-            teachers = [...teachersDB["33"], ...teachersDB["13"], ...teachersDB["29"]];
+            result = [...teachers["33"], ...teachers["13"], ...teachers["29"]];
         } else {
-            teachers = teachersDB[filterSchool] || [];
+            result = teachers[filterSchool] || [];
         }
     } else {
-        teachers = teachersDB[currentSchool] || [];
+        result = teachers[currentSchool] || [];
     }
+    
     if (currentCategory === 'chill') {
-        teachers = teachers.filter(t => maleTeachers.includes(t));
+        result = result.filter(t => maleTeachers.includes(t));
     }
-    return teachers;
+    
+    return result;
 }
 
 function renderTeacherWheel() {
+    perf.start('renderTeacherWheel');
+    
     const wheel = document.getElementById('teacherWheel');
     if (!wheel) return;
     
     const teachersList = getFilteredTeachers();
-    let html = '';
+    
+    // Оптимизация: создаём фрагмент документа
+    const fragment = document.createDocumentFragment();
     
     teachersList.forEach(teacher => {
-        const selectedClass = (selectedTeacher === teacher) ? 'selected-teacher' : '';
-        html += `<div class="teacher-option ${selectedClass}" data-teacher="${teacher}">${teacher}</div>`;
+        const div = document.createElement('div');
+        div.className = `teacher-option ${selectedTeacher === teacher ? 'selected-teacher' : ''}`;
+        div.dataset.teacher = teacher;
+        div.textContent = teacher;
+        fragment.appendChild(div);
     });
     
+    wheel.innerHTML = '';
     if (teachersList.length === 0) {
-        html = '<div class="teacher-option">Нет учителей в этой категории</div>';
+        wheel.innerHTML = '<div class="teacher-option">Нет учителей в этой категории</div>';
+    } else {
+        wheel.appendChild(fragment);
     }
-    
-    wheel.innerHTML = html;
 
-    document.querySelectorAll('.teacher-option').forEach(el => {
-        el.addEventListener('click', function() {
-            document.querySelectorAll('.teacher-option').forEach(opt => opt.classList.remove('selected-teacher'));
-            this.classList.add('selected-teacher');
-            selectedTeacher = this.dataset.teacher;
-            document.getElementById('saveVoteBtn').disabled = false;
-        });
+    // Добавляем обработчики через делегирование
+    wheel.addEventListener('click', (e) => {
+        const option = e.target.closest('.teacher-option');
+        if (!option || !option.dataset.teacher) return;
+        
+        document.querySelectorAll('.teacher-option').forEach(opt => opt.classList.remove('selected-teacher'));
+        option.classList.add('selected-teacher');
+        selectedTeacher = option.dataset.teacher;
+        document.getElementById('saveVoteBtn').disabled = false;
     });
+    
+    perf.end('renderTeacherWheel');
 }
 
+// Кэширование результатов сложных вычислений
+let cachedScores = null;
+let lastVoteChange = 0;
+
 function calculateSchoolScores() {
+    const now = Date.now();
+    if (cachedScores && now - lastVoteChange < 5000) {
+        return cachedScores;
+    }
+    
     const scores = { "33": 0, "13": 0, "29": 0 };
-    for (let school of ["33", "13", "29"]) {
-        if (votes[school]) {
-            for (let cat of ['sexy', 'good', 'mraz', 'fun', 'chill']) {
-                if (votes[school][cat]) {
-                    for (let teacher in votes[school][cat]) {
-                        if (votes[school][cat][teacher] && Array.isArray(votes[school][cat][teacher])) {
-                            scores[school] += votes[school][cat][teacher].length;
-                        }
-                    }
+    const schools = ["33", "13", "29"];
+    const cats = ['sexy', 'good', 'mraz', 'fun', 'chill'];
+    
+    for (let school of schools) {
+        const schoolVotes = votes[school];
+        if (!schoolVotes) continue;
+        
+        for (let cat of cats) {
+            const catVotes = schoolVotes[cat];
+            if (!catVotes) continue;
+            
+            for (let teacher in catVotes) {
+                const votesArray = catVotes[teacher];
+                if (votesArray?.length) {
+                    scores[school] += votesArray.length;
                 }
             }
         }
     }
+    
+    cachedScores = scores;
+    lastVoteChange = now;
     return scores;
 }
 
@@ -372,8 +455,9 @@ function updateActivityPodium() {
 }
 
 function getSchoolFromTeacher(teacher) {
+    const teachers = getTeachersDB();
     for (let school of ["33", "13", "29"]) {
-        if (teachersDB[school].includes(teacher)) {
+        if (teachers[school].includes(teacher)) {
             return school;
         }
     }
@@ -697,7 +781,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Голосование за учителей
+    // Голосование за учителей (используем queueSave)
     document.getElementById('saveVoteBtn')?.addEventListener('click', async function() {
         if (!selectedTeacher) {
             alert('Выбери учителя!');
@@ -714,15 +798,21 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!votes[currentSchool][currentCategory][selectedTeacher]) votes[currentSchool][currentCategory][selectedTeacher] = [];
         
         votes[currentSchool][currentCategory][selectedTeacher].push(deviceId);
-        await saveToFirebase();
+        
+        // Используем пакетное сохранение
+        queueSave('votes', votes);
         
         alert(`✅ Голос за ${selectedTeacher} учтён!`);
         document.getElementById('saveVoteBtn').disabled = true;
         selectedTeacher = null;
         document.querySelectorAll('.teacher-option').forEach(opt => opt.classList.remove('selected-teacher'));
+        
+        // Инвалидируем кэш
+        lastVoteChange = Date.now();
+        cachedScores = null;
     });
 
-    // Отправка комментария
+    // Отправка комментария (используем queueSave)
     document.getElementById('sendComment')?.addEventListener('click', async function() {
         const nickInput = document.getElementById('nickInput');
         const textInput = document.getElementById('commentInput');
@@ -743,14 +833,14 @@ document.addEventListener('DOMContentLoaded', function() {
             timestamp: Date.now()
         });
         
-        await saveToFirebase();
+        queueSave('comments', comments);
         renderComments();
         
         if (nickInput) nickInput.value = '';
         if (textInput) textInput.value = '';
     });
 
-    // Отправка предложения
+    // Отправка предложения (используем queueSave)
     document.getElementById('sendSuggestion')?.addEventListener('click', async function() {
         console.log('🔥 Кнопка отправки предложения нажата');
         
@@ -787,24 +877,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         suggestions.push(newSuggestion);
         
-        try {
-            // Сохраняем в Firebase
-            await saveToFirebase();
-            console.log('✅ Предложение сохранено в Firebase');
-            
-            // Очищаем поля
-            if (nickInput) nickInput.value = '';
-            if (schoolSelect) schoolSelect.value = '';
-            if (textInput) textInput.value = '';
-            
-            // Обновляем отображение
-            renderSuggestions();
-            
-            alert('✅ Предложение отправлено!');
-        } catch (error) {
-            console.error('❌ Ошибка сохранения:', error);
-            alert('❌ Ошибка при сохранении. Попробуй ещё раз.');
-        }
+        queueSave('suggestions', suggestions);
+        renderSuggestions();
+        
+        if (nickInput) nickInput.value = '';
+        if (schoolSelect) schoolSelect.value = '';
+        if (textInput) textInput.value = '';
+        
+        alert('✅ Предложение отправлено!');
     });
 
     // Обработчики лайков (общий для комментариев и предложений)
@@ -841,7 +921,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
                 
-                await saveToFirebase();
+                queueSave('commentLikes', commentLikes);
                 renderComments();
             } else if (type === 'suggestion') {
                 const suggestionItem = btn.closest('.suggestion-item');
@@ -870,7 +950,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
                 
-                await saveToFirebase();
+                queueSave('suggestionLikes', suggestionLikes);
                 renderSuggestions();
             }
         }
@@ -897,7 +977,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             poll.votes[option].push(deviceId);
-            await saveToFirebase();
+            queueSave('polls', polls);
             renderPolls();
         }
     });
@@ -996,4 +1076,3 @@ document.addEventListener('DOMContentLoaded', function() {
     updateTimer();
     setInterval(updateTimer, 60000);
 });
-
