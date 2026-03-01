@@ -84,7 +84,7 @@ let currentSchool = "33";
 let currentCategory = "sexy";
 let selectedTeacher = null;
 let filterSchool = "all";
-let currentNav = "main";
+let currentNav = "ratings"; // Теперь ratings по умолчанию
 
 // ID устройства
 let deviceId = localStorage.getItem('deviceId');
@@ -135,33 +135,6 @@ async function sendToTelegram(suggestion) {
         console.error('❌ Ошибка отправки:', error);
         return false;
     }
-}
-
-// ===== СОЗДАЁМ СЕКЦИЮ "О ПРОЕКТЕ" =====
-function createAboutSection() {
-    const container = document.querySelector('.container');
-    if (!container) return;
-    
-    if (document.getElementById('aboutSection')) return;
-    
-    const aboutSection = document.createElement('div');
-    aboutSection.id = 'aboutSection';
-    aboutSection.className = 'about-section';
-    aboutSection.style.display = 'none';
-    aboutSection.innerHTML = `
-        <div class="about-content">
-            <h2>О ПРОЕКТЕ / МАНИФЕСТ</h2>
-            <p>Школа — это ад.<br>Душные уроки, крики по утрам и куча домашнего ада. Но есть в этом филиале преисподней те, кто делает это место чуть менее невыносимым. Или наоборот — превращают его в настоящий кошмар.</p>
-            <p>SixSixSix Zaebis — это народный рейтинг учителей, свободный от лицемерия и школьной цензуры.</p>
-            <p>Мы не собираем грамоты и не целуем руки. Мы собираем голоса. Здесь ученики решают, кто реально «Zaebis» (то есть заслуживает уважения и лайка), а кто тянет школу на дно.</p>
-            <h3>Как это работает?</h3>
-            <p>Находишь свою «мучительницу» или «любимицу» в списке.<br>Ставишь оценку. Чеснок. Без прикрас.<br>Комментируешь так, как есть. Приколы, истории с уроков, крики душнил — всё в топку.</p>
-            <p>Это не просто голосование. Это акт неповиновения. Это наш способ сказать спасибо тем, кто реально учит, и высветить тех, кто давно потерял связь с реальностью.</p>
-            <p>Добро пожаловать в ад, детка. Здесь жарко, весело и только честные оценки.</p>
-            <div class="about-ad">🔞 ТУТ МОЖЕТ БЫТЬ ТВОЯ РЕКЛАМА 🔥<br><small>пиши в tg боте</small></div>
-        </div>
-    `;
-    container.appendChild(aboutSection);
 }
 
 // ===== ФУНКЦИИ FIREBASE =====
@@ -475,9 +448,6 @@ function renderComments() {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('✅ Страница загружена');
     
-    // Создаём секцию "О проекте"
-    createAboutSection();
-    
     // Навигация по меню
     document.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', function() {
@@ -487,40 +457,29 @@ document.addEventListener('DOMContentLoaded', function() {
             const nav = this.dataset.nav;
             currentNav = nav;
             
-            const winnersSection = document.querySelector('.winners-section');
-            const infoBox = document.querySelector('.info-box');
-            const selectionPanel = document.querySelector('.selection-panel');
-            const rouletteContainer = document.querySelector('.roulette-container');
-            const schoolLeaders = document.querySelector('.school-leaders');
-            const bottomPanel = document.querySelector('.bottom-panel');
-            const schoolActivity = document.querySelector('.school-activity');
-            const aboutSection = document.getElementById('aboutSection');
+            // Получаем все секции
+            const ratingsSection = document.getElementById('ratingsSection');
+            const votingSection = document.getElementById('votingSection');
             const suggestionsSection = document.getElementById('suggestionsSection');
+            const aboutSection = document.getElementById('aboutSection');
             
             // Скрываем всё
-            if (winnersSection) winnersSection.style.display = 'none';
-            if (infoBox) infoBox.style.display = 'none';
-            if (selectionPanel) selectionPanel.style.display = 'none';
-            if (rouletteContainer) rouletteContainer.style.display = 'none';
-            if (schoolLeaders) schoolLeaders.style.display = 'none';
-            if (bottomPanel) bottomPanel.style.display = 'none';
-            if (schoolActivity) schoolActivity.style.display = 'none';
-            if (aboutSection) aboutSection.style.display = 'none';
+            if (ratingsSection) ratingsSection.style.display = 'none';
+            if (votingSection) votingSection.style.display = 'none';
             if (suggestionsSection) suggestionsSection.style.display = 'none';
+            if (aboutSection) aboutSection.style.display = 'none';
             
             // Показываем нужное
-            if (nav === 'main') {
-                if (winnersSection) winnersSection.style.display = 'block';
-                if (infoBox) infoBox.style.display = 'block';
-                if (selectionPanel) selectionPanel.style.display = 'flex';
-                if (rouletteContainer) rouletteContainer.style.display = 'block';
-                if (bottomPanel) bottomPanel.style.display = 'flex';
-                if (schoolActivity) schoolActivity.style.display = 'block';
-                if (currentSchool !== 'raion' && schoolLeaders) schoolLeaders.style.display = 'block';
+            if (nav === 'ratings') {
+                if (ratingsSection) ratingsSection.style.display = 'block';
+            } else if (nav === 'voting') {
+                if (votingSection) votingSection.style.display = 'block';
+                // Обновляем данные для голосования
+                renderTeacherWheel();
+                renderComments();
+                renderSchoolLeaders();
             } else if (nav === 'suggestions') {
-                if (suggestionsSection) {
-                    suggestionsSection.style.display = 'block';
-                }
+                if (suggestionsSection) suggestionsSection.style.display = 'block';
             } else if (nav === 'about') {
                 if (aboutSection) aboutSection.style.display = 'block';
             }
