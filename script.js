@@ -331,26 +331,58 @@ function getSchoolFromTeacher(teacher) {
     return "неизвестно";
 }
 
+// ===== ИСПРАВЛЕННАЯ ФУНКЦИЯ - собирает голоса со всех школ =====
 function getDistrictWinners() {
     const categories = ['sexy', 'good', 'mraz', 'fun', 'chill'];
     const winners = {};
-    const raionVotes = votes['raion'] || {};
-
+    
+    // Объединяем голоса из всех школ и района
+    const allVotes = {
+        "33": votes["33"] || {},
+        "13": votes["13"] || {},
+        "29": votes["29"] || {},
+        "raion": votes["raion"] || {}
+    };
+    
     categories.forEach(cat => {
-        let maxCount = 0;
-        let winnerName = 'нет голосов';
-        if (raionVotes[cat]) {
-            for (let teacher in raionVotes[cat]) {
-                const cnt = raionVotes[cat][teacher] ? raionVotes[cat][teacher].length : 0;
-                if (cnt > maxCount) {
-                    maxCount = cnt;
-                    winnerName = teacher;
+        // Создаем объект для подсчета голосов по каждому учителю
+        const teacherVotes = {};
+        
+        // Собираем голоса из всех школ
+        for (let school of ["33", "13", "29", "raion"]) {
+            const schoolVotes = allVotes[school];
+            if (schoolVotes && schoolVotes[cat]) {
+                for (let teacher in schoolVotes[cat]) {
+                    // Добавляем голоса к общему счету учителя
+                    if (!teacherVotes[teacher]) {
+                        teacherVotes[teacher] = 0;
+                    }
+                    // Учитываем все голоса (массив или число)
+                    if (Array.isArray(schoolVotes[cat][teacher])) {
+                        teacherVotes[teacher] += schoolVotes[cat][teacher].length;
+                    } else {
+                        teacherVotes[teacher] += schoolVotes[cat][teacher] || 0;
+                    }
                 }
             }
         }
+        
+        // Находим победителя с максимальным количеством голосов
+        let maxCount = 0;
+        let winnerName = 'нет голосов';
+        
+        for (let teacher in teacherVotes) {
+            if (teacherVotes[teacher] > maxCount) {
+                maxCount = teacherVotes[teacher];
+                winnerName = teacher;
+            }
+        }
+        
+        // Определяем школу победителя
         const school = winnerName !== 'нет голосов' ? getSchoolFromTeacher(winnerName) : '';
         winners[cat] = { name: winnerName, votes: maxCount, school: school };
     });
+    
     return winners;
 }
 
